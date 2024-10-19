@@ -1,0 +1,104 @@
+.mainbox-container {
+    background-color: #000000;
+    /* Dark background */
+    border: 2px solid #1882fc;
+    /* Blue border */
+    border-radius: 8px;
+    /* Rounded corners */
+    padding: 16px;
+    /* Inner spacing */
+    max-width: 450px;
+    /* Limit width */
+    /* Center the box horizontally */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow for depth */
+    color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 0vh;
+    margin-right: 2vw;
+    width: 23%;
+    height: 37vh;
+
+    /* Text color */
+}
+
+h3 {
+    justify-self: center;
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: 22px;
+    /* Space below heading */
+}
+
+.question-input {
+    width: 90%;
+    /* Full width */
+    height: 60px;
+    /* Fixed height */
+    border: 1px solid #1882fc;
+    /* Blue border */
+    border-radius: 4px;
+    /* Rounded corners */
+    padding: 8px;
+    /* Inner spacing */
+    background-color: #080808;
+    /* Dark input background */
+    color: #ffffff;
+    /* Text color */
+    margin-bottom: 12px;
+    /* Space below the input */
+    resize: none;
+    /* Disable resizing */
+}
+
+.question-input::placeholder {
+    color: #b0bec5;
+    /* Placeholder text color */
+}
+
+button {
+    background-color: #1e88e5;
+    /* Blue button */
+    color: #ffffff;
+    /* Button text color */
+    border: none;
+    /* No border */
+    border-radius: 4px;
+    /* Rounded corners */
+    padding: 10px 16px;
+    /* Inner spacing */
+    cursor: pointer;
+    /* Pointer on hover */
+    transition: background-color 0.3s ease;
+    /* Smooth transition */
+}
+
+button:hover {
+    background-color: #1565c0;
+    /* Darker blue on hover */
+}
+
+.answer-box {
+    margin-top: -15px;
+    /* Space above answer */
+    padding: 12px;
+    /* Inner spacing */
+    background-color: #080808;
+    /* Darker background for answer box */
+    border-radius: 4px;
+    /* Rounded corners */
+    border: 1px solid #1882fc;
+    height: 110px;
+    width: 400px;
+    color: white;
+    overflow-y: auto;
+    /* Blue border for answer box */
+}
+
+.answer-box h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+
+}

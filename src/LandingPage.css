@@ -1,0 +1,187 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    /* Modern font for a sleeker look */
+    background-color: #000000;
+    color: #e0e0e0;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.landing-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #0f0f0f, #000000);
+    /* Gradient for a modern feel */
+}
+
+.landing-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #000000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    /* Add shadow for depth */
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: hsl(0, 0%, 100%);
+    letter-spacing: 2px;
+    /* Adds space between letters for a futuristic touch */
+}
+
+.nav-links a {
+    color: #e0e0e0;
+    text-decoration: none;
+    margin-left: 20px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+    transform: scale(1.05);
+    /* Subtle hover effect */
+}
+
+.signup-btn {
+    background-color: #1882fc;
+    color: #0f0f0f;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s;
+    box-shadow: 0 4px 15px rgba(24, 130, 252, 0.4);
+}
+
+.signup-btn:hover {
+    background-color: #005dc8;
+    transform: translateY(-3px);
+}
+
+.landing-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px 20px;
+    color: #ffffff;
+}
+
+h1 {
+    font-size: 52px;
+    margin-bottom: 20px;
+    color: #1882fc;
+    text-shadow: 0 4px 15px rgba(24, 130, 252, 0.6);
+    /* Glow effect for modern look */
+}
+
+.tagline {
+    font-size: 26px;
+    margin-bottom: 40px;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.cta-button {
+    padding: 14px 28px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.primary {
+    background-color: #1882fc;
+    color: #0f0f0f;
+}
+
+.primary:hover {
+    background-color: #005dc8;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(24, 130, 252, 0.5);
+    /* Make hover more dynamic */
+}
+
+.secondary {
+    background-color: transparent;
+    border: 2px solid #1882fc;
+    color: #1882fc;
+}
+
+.secondary:hover {
+    background-color: #1882fc;
+    color: #ffffff;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(24, 130, 252, 0.5);
+}
+
+.features-section {
+    background-color: #000000;
+    padding: 60px 20px;
+    text-align: center;
+    color: #e0e0e0;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.feature-item {
+    background: linear-gradient(135deg, #0f0f0f, #000000);
+    padding: 35px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.feature-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(24, 130, 252, 0.3);
+}
+
+.feature-icon {
+    font-size: 38px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    /* Consistent with color theme */
+}
+
+.feature-item h3 {
+    color: #1882fc;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .landing-nav {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .nav-links {
+        margin-top: 20px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}

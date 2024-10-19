@@ -1,0 +1,112 @@
+/* Container for the entire settings page */
+.settings-page-container {
+    background-color: #000000;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center content horizontally */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+}
+
+/* Styles for headings in the settings page */
+.settings-page-container h1,
+.settings-page-container h2 {
+    color: #1882fc;
+    /* Blue color for headings */
+    margin-bottom: 15px;
+    text-align: center;
+    /* Center headings */
+}
+
+/* Styles for input fields and select elements in the settings page */
+.settings-page-container input[type="text"],
+.settings-page-container input[type="email"],
+.settings-page-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #1882fc;
+    border-radius: 5px;
+    background-color: #333;
+    /* Dark background for input */
+    color: #fff;
+    font-size: 1rem;
+    /* Adjust font size as needed */
+}
+
+/* Styles for buttons in the settings page */
+.settings-page-container button {
+    background-color: #1a1a1a;
+    border: 2px solid #1882fc;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    /* Adjust font size as needed */
+    transition: background-color 0.3s ease;
+}
+
+/* Styles for button hover effect */
+.settings-page-container button:hover {
+    background-color: #357ab7;
+    /* Darker shade on hover */
+}
+
+/* Specific styling for profile settings section */
+.profile-settings {
+    margin-bottom: 20px;
+    /* Add margin for spacing */
+    display: flex;
+    flex-direction: column;
+    /* Arrange elements vertically */
+    align-items: center;
+    /* Center content horizontally */
+    width: 350px;
+    /* Adjust width as needed */
+}
+
+/* Specific styling for writing bot settings section */
+.bot-settings {
+    margin-bottom: 20px;
+    /* Add margin for spacing */
+    display: flex;
+    flex-direction: column;
+    /* Arrange elements vertically */
+    align-items: center;
+    /* Center content horizontally */
+    width: 350px;
+    /* Adjust width as needed */
+}
+
+.profile-settings label,
+.bot-settings label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.profile-settings input[type="file"],
+.bot-settings input[type="checkbox"] {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Home Button Styling */
+
+.settings-home-button1 {
+    background-color: #fff6f6;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 10px 15px;
+    border-radius: 4px;
+
+    align-self: flex-start;
+}

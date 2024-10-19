@@ -1,0 +1,153 @@
+/* Toolbar container */
+.toolbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    border-radius: 5px;
+
+    background-color: #0091ff;
+    /* Light background like Google Docs */
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+    height: 6vh;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Light shadow for elevation */
+}
+
+/* Toolbar content */
+.toolbar {
+    display: flex;
+    width: 100%;
+    background-color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: center;
+
+}
+
+.toolbar ::after {
+    border: 2px solid #0524f0;
+}
+
+/* Menu item style */
+.menu-item {
+    position: relative;
+    color: #ffffff;
+    /* Light gray text */
+    font-size: 14px;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.menu-item:hover {
+    background-color: transparent;
+    /* Light hover background */
+    color: #202124;
+    /* Dark text on hover */
+}
+
+/* Dropdown menu */
+.dropdown {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: #1e1e1e;
+    /* White background for dropdown */
+    border: 1px solid #dadce0;
+    border-radius: 3px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    padding: 5px 0;
+}
+
+/* Dropdown buttons */
+.dropdown button {
+    background: none;
+    color: #ffffff;
+    padding: 10px 15px;
+    text-align: left;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown button:hover {
+    background-color: #f1f3f4;
+}
+
+/* Icon next to menu items */
+.home-icon {
+    width: 44px;
+    height: 44px;
+    margin-right: 8px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    fill: #5f6368;
+    transition: fill 0.2s ease;
+    border-radius: 10px;
+    border: 2px solid var(--secondary-purple);
+}
+
+/* Hover effect for home-icon */
+.home-icon:hover {
+    fill: #5f6368;
+    scale: 1.1;
+
+    /* No background color change */
+}
+
+/* Toolbar buttons (optional) */
+.toolbar-button {
+    padding: 8px 12px;
+    margin-left: 10px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #3c4043;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-size: 14px;
+}
+
+.toolbar-button:hover {
+    background-color: #f1f3f4;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.15);
+    /* Subtle shadow on hover */
+}
+
+.toolbar-button:active {
+    background-color: #e8eaed;
+    box-shadow: inset 0 1px 3px rgba(60, 64, 67, 0.2);
+}
+
+.showarticlesbutton {
+    position: absolute;
+    /* Keep absolute positioning */
+    right: 10px;
+    /* Position it to the right with some margin */
+    top: 50%;
+    /* Center it vertically */
+    transform: translateY(-50%);
+    /* Adjust to truly center */
+    padding: 8px 12px;
+    color: white;
+    border-radius: 4px;
+    background-color: #000000;
+    border: 2px solid #1882fc;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-size: 14px;
+}

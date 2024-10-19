@@ -1,0 +1,212 @@
+/* General styles */
+body {
+    background-color: #000000;
+    /* Dark background */
+    color: #e0e0e0;
+    /* Light text color */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Research container */
+.research-container {
+    width: 98vw;
+    height: 100vh;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #000000;
+    /* Background for the container */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+}
+
+.research-container h1 {
+    text-align: center;
+    color: #0066cc;
+    /* Blue-green color for titles */
+    margin-bottom: 20px;
+}
+
+/* Search bar styles */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+
+}
+
+
+
+.search-container input {
+
+    padding: 10px;
+    max-width: 500px;
+
+    border: 1px solid #0066cc;
+    /* Border color */
+    border-radius: 4px;
+    background-color: #292929;
+    /* Input background */
+    color: #e0e0e0;
+    /* Input text color */
+    margin-right: 10px;
+    transition: border 0.3s ease;
+}
+
+.search-container input:focus {
+    border-color: #0066cc;
+    /* Dark blue when focused */
+    outline: none;
+    /* Remove default outline */
+}
+
+.search-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-left: -10px;
+    background-color: #0066cc;
+    /* Button background */
+    color: #fff;
+    /* Button text color */
+    cursor: pointer;
+
+}
+
+.search-container button:hover {
+    background-color: #004a99;
+    /* Darker blue on hover */
+
+    /* Slight lift effect */
+}
+
+.search-container button:disabled {
+    background-color: #555;
+    /* Darker color for disabled state */
+    cursor: not-allowed;
+    /* Change cursor for disabled state */
+}
+
+/* Error message */
+.error {
+    background-color: #ff4d4d;
+    /* Red for error messages */
+    color: white;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Results container */
+.results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Space between articles */
+}
+
+.article-box {
+    background-color: #1e1e1e;
+    /* Dark background for articles */
+    border: 1px solid #0066cc;
+    /* Border for articles */
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.3s ease;
+}
+
+.article-box:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    /* Shadow effect on hover */
+}
+
+.article-box h3 {
+    color: #0066cc;
+    /* Title color */
+    margin: 0 0 10px;
+}
+
+.article-box p {
+    margin: 10px 0;
+    color: #c0c0c0;
+    /* Slightly lighter for text */
+}
+
+/* Link styling */
+.article-box a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #0066cc;
+    /* Link button background */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.article-box a:hover {
+    background-color: #004a99;
+    /* Darker blue on hover */
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #0066cc;
+    /* Button background */
+    color: #fff;
+    /* Button text color */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #004a99;
+    /* Darker blue on hover */
+}
+
+.pagination span {
+    color: #e0e0e0;
+    /* Light text for pagination info */
+}
+
+.home-button {
+    background-color: #0066cc;
+    /* Button background */
+    color: #fff;
+    /* Button text color */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.addprojectbtn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 13px 13px;
+    margin-left: 10px;
+    background-color: #0066cc;
+    /* Button background */
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.addprojectbtn:hover {
+    background-color: #004a99;
+    /* Darker blue on hover */
+}

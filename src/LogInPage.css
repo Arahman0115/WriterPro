@@ -1,0 +1,128 @@
+/* General layout */
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #090909;
+}
+
+.divider-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.divider-wrapper::before,
+.divider-wrapper::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--text-secondary);
+}
+
+.divider-wrapper span {
+    margin: 0 15px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.login-box {
+    background-color: #000000;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 350px;
+}
+
+.google-login-button {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: #121111;
+    transition: background-color 0.3s ease;
+}
+
+.google-login-button:hover {
+    background-color: #dbd8d8;
+}
+
+.google-login-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.login-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #121111;
+    color: #fff;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.login-input:focus {
+    border: 1px solid #1882fc;
+}
+
+.login-button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #1882fc;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.login-button:hover {
+    background-color: #075bbb;
+}
+
+.toggle-button {
+    font-size: 14px;
+    color: #999;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.toggle-button:hover {
+    color: #fff;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+    .login-box {
+        width: 90%;
+        padding: 20px;
+    }
+}

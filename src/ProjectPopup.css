@@ -1,0 +1,86 @@
+/* ProjectPopup.css */
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    /* Ensure the popup is on top of other content */
+}
+
+.popup-content {
+    background-color: rgb(0, 0, 0);
+    /* White background for the popup */
+    border-radius: 8px;
+    /* Rounded corners */
+    padding: 20px;
+    max-width: 400px;
+    /* Max width for the popup */
+    width: 90%;
+    /* Responsive width */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    /* Shadow effect */
+    position: relative;
+    border: 2px solid #007bff;
+    /* Position relative for button */
+}
+
+.popup-content h2 {
+    margin-bottom: 15px;
+    /* Space below the title */
+}
+
+.popup-content ul {
+    list-style-type: none;
+    /* Remove default list styles */
+    padding: 0;
+    /* Remove padding */
+    margin: 0;
+    /* Remove margin */
+}
+
+.popup-content li {
+    padding: 10px;
+    /* Space inside list items */
+    cursor: pointer;
+    /* Pointer cursor for list items */
+    transition: background-color 0.3s;
+    /* Smooth background change */
+}
+
+.popup-content li:hover {
+    background-color: #a7a4a4;
+    border-radius: 5px;
+    /* Light grey on hover */
+}
+
+.popup-content button {
+    margin-top: 15px;
+    /* Space above the button */
+    padding: 10px 15px;
+    /* Button padding */
+    border: none;
+    /* Remove border */
+    border-radius: 5px;
+    /* Rounded corners */
+    background-color: #007bff;
+    /* Bootstrap primary color */
+    color: white;
+    /* White text */
+    cursor: pointer;
+    /* Pointer cursor for button */
+    transition: background-color 0.3s;
+    /* Smooth background change */
+}
+
+.popup-content button:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+}

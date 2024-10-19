@@ -1,0 +1,539 @@
+.writer-container {
+    display: flex;
+    flex-direction: column;
+    height: 95vh;
+    width: 90vw;
+    background-color: #080808;
+    padding: 20px;
+    margin-left: 0vw;
+    margin-top: 2vh;
+    overflow: hidden;
+
+}
+
+.writer {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 69vw;
+    margin-top: 20px;
+    max-height: 90vh;
+    background-color: #000000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    position: relative;
+    margin-bottom: 20px;
+    margin-right: 150px;
+    transition: all 0.3s ease;
+    border: 2px solid #1882fc;
+}
+
+.writer:hover {
+    flex-grow: 1;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+}
+
+.title-input {
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border: 1px solid #1882fc;
+    border-radius: 10px;
+    width: 90%;
+    background-color: #000000;
+    color: #ffffff;
+    align-self: center;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
+
+}
+
+.title-section {
+    background-color: #000000;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.title-input:focus {
+    outline: none;
+    border-color: #1882fc;
+    box-shadow: 0 0 10px #01036c;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 5px 35px;
+
+}
+
+.project-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    /* Center the title */
+    text-align: center;
+    /* Ensures the text inside is centered */
+    width: 100%;
+    /* Take full width to properly center */
+}
+
+.textarea-wrapper {
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.writing-area {
+    width: 90%;
+    min-height: 70vh;
+    max-height: 80vh;
+    max-width: 80vw;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    padding: 25px;
+    border: 2px solid #1882fc;
+    border-radius: 10px;
+    background-color: #080808;
+    color: #ffffff;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0 auto;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.writing-area:focus {
+    outline: none;
+    border-color: #2383f0;
+
+
+
+}
+
+.suggestion-overlay {
+    width: 24%;
+    height: 40vh;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 10px;
+    border: 2px solid #1882fc;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #BB86FC;
+    z-index: 1;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 8vh;
+    margin-right: 2vw;
+    overflow-y: none;
+}
+
+.sugtitle {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif, 'Courier New', Courier, monospace;
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+    /* Required for positioning the pseudo-element */
+}
+
+.sugtitle::after {
+    content: '';
+    display: block;
+    width: 105%;
+    justify-self: center;
+    /* Adjust this value to make the underline longer */
+    height: 2px;
+    /* Adjust the thickness of the underline */
+    background-color: #1882fc;
+    /* Color of the underline */
+    position: absolute;
+    left: -2.3%;
+    /* Adjust this value to center the underline */
+    bottom: -3px;
+    /* Adjust this value to position the underline */
+}
+
+.suggestiontitle {
+    bottom: 0;
+    right: 0;
+    margin-bottom: 54vh;
+    margin-right: 6vw;
+    padding: 10px 50px;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #000000;
+    position: absolute;
+    font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 22px;
+    border: 2px solid #1882fc;
+}
+
+
+
+.suggestion {
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
+}
+
+.collapsible-bar {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 40px;
+    background-color: #1E1E1E;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: height 0.3s ease;
+    overflow: hidden;
+}
+
+.collapsible-bar:hover {
+    height: 120px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #BB86FC;
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.controls button:hover {
+    background-color: #9A67EA;
+}
+
+.character-count {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.outline-box {
+    background-color: #000000;
+    border: 2px solid #1882fc;
+    border-radius: 8px;
+    padding: 10px;
+    height: 35vh;
+    width: 24%;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 52vh;
+    color: #ffffff;
+    font-size: 16px;
+    overflow-y: auto;
+    margin-right: 2vw;
+}
+
+.chat-box {
+    background-color: #000000;
+    border: 2px solid #1882fc;
+    border-radius: 8px;
+    padding: 10px;
+    height: 25vh;
+    width: 24%;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 5vh;
+    color: #ffffff;
+    font-size: 16px;
+    overflow-y: auto;
+    margin-right: 2vw;
+}
+
+.outline-box h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #ffffff;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
+}
+
+.outline-box ul {
+    list-style: none;
+    padding-left: 0;
+
+}
+
+.outline-box ul li {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    background-color: #080808;
+    font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
+    border-radius: 5px;
+    cursor: grab;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+
+.outline-box ul li::before {
+    content: '☰';
+    margin-right: 10px;
+    color: #1882fc;
+}
+
+.outline-box ul li:hover {
+    background-color: #3C3C3C;
+}
+
+.outline-box ul li:active {
+    cursor: grabbing;
+    background-color: #4A4A4A;
+}
+
+.outline-box li[data-rbd-dragging="true"] {
+    background-color: #3C3C3C;
+    box-shadow: 0 2px 10px rgba(187, 134, 252, 0.3);
+}
+
+.new-section {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+
+.feedback-message {
+    color: #3b3939;
+    font-size: 16px;
+    text-align: left;
+    margin-top: -0px;
+}
+
+.new-section input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #1882fc;
+    border-radius: 5px;
+    background-color: #080808;
+    color: white;
+}
+
+.new-section button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #1882fc;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.new-section button:hover {
+    background-color: #2639b6;
+}
+
+.outline-box::-webkit-scrollbar {
+    width: 2px;
+}
+
+.outline-box::-webkit-scrollbar-track {
+    background: #1E1E1E;
+}
+
+.outline-box::-webkit-scrollbar-thumb {
+    background-color: #000000;
+    border-radius: 10px;
+}
+
+.outline-box::-webkit-scrollbar-thumb:hover {
+    background-color: #9A67EA;
+}
+
+.outline-box {
+    scrollbar-width: thin;
+    scrollbar-color: #1882fc #1E1E1E;
+}
+
+.spinnerbox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.spinner {
+    border: 3px solid #1E1E1E;
+    border-top: 3px solid #1882fc;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    position: relative;
+    top: 50%;
+    left: 10%;
+    transform: translate(-90%, -50%);
+    z-index: 1000;
+}
+
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+
+.title-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.title-submit {
+    padding: 8px 12px;
+    background-color: #000000;
+    color: #121212;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+
+}
+
+.title-submit:hover {
+    background-color: #ffffff;
+}
+
+.side-panel {
+    width: 250px;
+    height: 90vh;
+    background-color: #000000;
+    border: 2px solid #1882fc;
+    border-radius: 8px;
+    padding: 15px;
+    position: fixed;
+    top: 6vh;
+    right: -300px;
+    /* Initially position it off-screen */
+    color: #ffffff;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease;
+    /* Smooth transition for sliding effect */
+}
+
+/* When the side panel is visible */
+.side-panel.visible {
+    right: 0;
+    /* Slide in to be fully visible */
+}
+
+/* Title styling */
+.side-panel h2 {
+    margin: 0 0 15px;
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Unordered list styles */
+.side-panel ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* List item styles */
+.side-panel li {
+    margin-bottom: 15px;
+    word-wrap: break-word;
+}
+
+/* Link styles */
+.side-panel li a {
+    color: #1882fc;
+    text-decoration: none;
+    display: block;
+    overflow-wrap: break-word;
+}
+
+/* Link hover effect */
+.side-panel li a:hover {
+    text-decoration: underline;
+}
+
+/* Button styling */
+.sidepanelbutton {
+    background-color: #1882fc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    position: fixed;
+    top: 70px;
+    right: 0;
+    z-index: 11;
+    transition: background-color 0.3s, right 0.3s ease;
+    /* Add transition for smooth movement */
+}
+
+/* Button hover effect */
+.sidepanelbutton:hover {
+    background-color: #2639b6;
+}
+
+/* Button position when side panel is visible */
+.sidepanelbutton.panel-visible {
+    right: 250px;
+    /* Move button when panel is visible */
+}
+
+.articlebox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border: 2px solid #1882fc;
+    border-radius: 5px;
+    background-color: #0d0d0d;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.outlinenassistant {
+    margin-top: 50px;
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    margin-left: -200px;
+    border: 2px solid #1882fc;
+    background-color: #01036c;
+}

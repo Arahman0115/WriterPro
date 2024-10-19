@@ -1,0 +1,94 @@
+/* App.css */
+
+/* General body styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  /* Make the body cover full height */
+  background-color: #e9ecef;
+  /* Light background color */
+}
+
+/* Main app container */
+.app {
+
+  /* Make the app container take full height */
+  display: flex;
+  /* Use flexbox to arrange children */
+  flex-direction: column;
+  /* Stack items vertically */
+  justify-content: center;
+  /* Center content vertically */
+  align-items: center;
+  /* Center content horizontally */
+  padding: 20px;
+  /* Add padding inside the container */
+  border-radius: 5px;
+  /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  background-color: #0e0c0c;
+  /* White background for the app */
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Heading styles */
+h1 {
+  text-align: center;
+  /* Center the main heading */
+  color: #333;
+  /* Darker text color for contrast */
+  margin-bottom: 20px;
+  /* Space below the heading */
+}
+
+.vsc-initialized {
+  background-color: #080808;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .app {
+    padding: 10px;
+    /* Less padding on smaller screens */
+  }
+
+  .title-input,
+  .writing-area {
+    font-size: 14px;
+    /* Smaller font size for inputs */
+  }
+
+  .controls button {
+    font-size: 14px;
+    /* Smaller button text */
+  }
+
+  .character-count {
+    font-size: 12px;
+    /* Smaller character count text */
+  }
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
