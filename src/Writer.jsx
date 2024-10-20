@@ -12,7 +12,7 @@ import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveContent } from './contentManager';
 import { Editor, EditorState, ContentState, Modifier, CompositeDecorator, getDefaultKeyBinding } from 'draft-js';
-
+import { VITE_API_URL } from '../.env';
 import 'draft-js/dist/Draft.css';
 
 const Writer = () => {
@@ -179,11 +179,11 @@ const Writer = () => {
       return;
     }
     try {
-      const response = await fetch('https://writprobackend.onrender.com/api/predict', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Origin': 'http://localhost:5173'  // Add this line
+          'Origin': 'http://localhost:5173'  // You might want to make this dynamic too
         },
         body: JSON.stringify({ prompt }),
       });

@@ -7,6 +7,7 @@ import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './GeneralSearch.css';
 import { ChevronLeft } from 'lucide-react';
+import { VITE_API_URL } from '../.env';
 
 const GeneralSearch = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +18,7 @@ const GeneralSearch = () => {
     const { currentUser } = useAuth();
     const userUid = currentUser?.uid;
     const navigate = useNavigate();
+
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -42,12 +44,12 @@ const GeneralSearch = () => {
         if (!searchTerm) return; // Prevent search with empty term
         setLoading(true); // Set loading state
         try {
-            const response = await axios.post('https://writprobackend.onrender.com/api/search', { searchTerm });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/search`, { searchTerm });
             setResults(response.data.results);
             setCurrentPage(1); // Reset to the first page on new search
         } catch (error) {
             console.error("Error fetching data from server:", error);
-            // Optionally show an error message to the user
+            // Optionally show an error message to the userd
         } finally {
             setLoading(false); // Reset loading state
         }
