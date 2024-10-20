@@ -179,7 +179,7 @@ const Writer = () => {
       return;
     }
     try {
-      const response = await fetch('https://writerprobackend-a98d0d5d6c74.herokuapp.com/api/predict', {
+      const response = await fetch('https://writprobackend.onrender.com/api/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

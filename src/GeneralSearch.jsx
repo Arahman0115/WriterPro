@@ -42,7 +42,7 @@ const GeneralSearch = () => {
         if (!searchTerm) return; // Prevent search with empty term
         setLoading(true); // Set loading state
         try {
-            const response = await axios.post('https://writerprobackend-a98d0d5d6c74.herokuapp.com/api/search', { searchTerm });
+            const response = await axios.post('https://writprobackend.onrender.com/api/search', { searchTerm });
             setResults(response.data.results);
             setCurrentPage(1); // Reset to the first page on new search
         } catch (error) {
