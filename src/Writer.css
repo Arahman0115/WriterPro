@@ -253,6 +253,16 @@
     margin-right: 2vw;
 }
 
+.styled-block {
+    position: absolute;
+    font-size: 14px;
+    /* Adjust as needed */
+    line-height: 20px;
+    /* Adjust as needed */
+    pointer-events: none;
+    z-index: 1;
+}
+
 .chat-box {
     background-color: #000000;
     border: 2px solid #1882fc;

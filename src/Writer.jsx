@@ -11,6 +11,7 @@ import Spinner from './Spinner';
 import MainBox from './MainBox';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { saveContent } from './contentManager';
 
 
 const formatCitation = (citation) => {
@@ -48,6 +49,7 @@ const Writer = () => {
   const [isArticlesVisible, setIsArticlesVisible] = useState(false); // State for the articles panel
   const [articles, setArticles] = useState([]); // State for storing articles
   const [isSidePanelVisible, setIsSidePanelVisible] = useState(false);
+  const [styledBlocks, setStyledBlocks] = useState([]);
 
 
   const navigate = useNavigate();
@@ -165,39 +167,37 @@ const Writer = () => {
   // Debounced content saving to Firebase
   // Debounced content saving to Firebase
   const saveContent = useCallback(
-    debounce(async (updatedSections) => {
+    debounce(async (user, project, updatedSections, sectionOrder, title, articles) => {
       const currentProject = {
         title,
         sections: updatedSections,
-        sectionOrder, // Include the current sectionOrder
+        sectionOrder,
         lastEdited: Date.now(),
         articles
       };
 
       if (user) {
         try {
-          // If a project ID exists, update the existing document
-          if (location.state?.project?.id) {
-            const docRef = doc(db, `users/${user.uid}/projects`, location.state.project.id);
+          if (project?.id) {
+            const docRef = doc(db, `users/${user.uid}/projects`, project.id);
             await setDoc(docRef, currentProject, { merge: true });
-            setFeedbackMessage('Saved');
+            setTimeout(() => setFeedbackMessage('Saved'), 5000); // 5 second delay
           } else {
-            // If no project ID, create a new document and set the project ID to state
             const newDocRef = await addDoc(collection(db, `users/${user.uid}/projects`), currentProject);
-            // Optionally, update the project state with the new ID
             navigate(`/writer`, { state: { project: { ...currentProject, id: newDocRef.id } } });
-            setFeedbackMessage('Saved');
+            setTimeout(() => setFeedbackMessage('Saved'), 5000); // 5 second delay
           }
         } catch (e) {
           console.error("Error saving document: ", e);
+          setFeedbackMessage('Error saving');
         }
       } else {
         console.log('User is not authenticated');
+        setFeedbackMessage('Not logged in');
       }
     }, 4000),
-    [title, sections, sectionOrder, articles, user, location]
+    [navigate]
   );
-
   // Handle text change and word suggestions
   const handleChange = (e) => {
     const value = e.target.value;
@@ -207,8 +207,24 @@ const Writer = () => {
     };
     setSections(updatedSections);
     setIsEditing(true);
-    setFeedbackMessage('Saving...');
+    setFeedbackMessage('Editing...');
 
+    // Detect trigger words and create styled blocks
+    const triggerWords = ['@template', '@summarize'];
+    const words = value.split(' ');
+    const newStyledBlocks = [];
+
+    words.forEach((word, index) => {
+      if (triggerWords.includes(word.toLowerCase())) {
+        newStyledBlocks.push({
+          word,
+          start: value.indexOf(word),
+          end: value.indexOf(word) + word.length,
+        });
+      }
+    });
+
+    setStyledBlocks(newStyledBlocks);
     if (suggestionTimeoutRef.current) {
       clearTimeout(suggestionTimeoutRef.current);
     }
@@ -225,8 +241,9 @@ const Writer = () => {
 
     // Set a new save timeout for 4 seconds
     saveTimeoutRef.current = setTimeout(() => {
-      saveContent(updatedSections);
-      console.log('Auto-saving...');
+      saveContent(user, location.state?.project, updatedSections, sectionOrder, title, articles);
+      setFeedbackMessage('Saving...');
+      console.log('Saving changes...');
     }, 4000);
   };
 
@@ -299,7 +316,7 @@ const Writer = () => {
   const switchSection = (sectionName) => {
     if (sections[sectionName]) {
       setActiveSection(sectionName);
-      setTimeout(() => saveContent(sections), 1000);  // Delay save to avoid immediate conflict
+      setTimeout(() => saveContent(user, location.state?.project, sections, sectionOrder, title, articles), 1000);
     }
   };
 
@@ -353,24 +370,17 @@ const Writer = () => {
       setActiveSection(sectionName);
     }
   };
-
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
-    // Create a new array from the current sectionOrder
     const items = Array.from(sectionOrder);
-
-    // Remove the item from its original position
     const [reorderedItem] = items.splice(result.source.index, 1);
-
-    // Insert it into the destination position
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Update state to reflect the new order
     setSectionOrder(items);
 
-    // Ensure you are saving the updated order of sections
-    saveContent(items); // Pass the updated order to Firestore
+    // Save the updated order
+    saveContent(user, location.state?.project, sections, items, title, articles);
   };
 
   const toggleArticlesVisibility = () => {
@@ -460,7 +470,7 @@ const Writer = () => {
       </div>
       <Toolbar
         onNewClick={() => gotowriter()}
-        onSaveClick={() => saveContent(sections)}
+        onSaveClick={() => saveContent(user, location.state?.project, sections, sectionOrder, title, articles)}
         onDownloadClick={handleDownload}
         onExportWordClick={handleExportAsMicrosoftWord}
         onShowArticlesClick={toggleArticlesVisibility}

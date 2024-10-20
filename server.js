@@ -26,43 +26,6 @@ const generateUserMessage = (content) => ({
 });
 
 // POST route for mainbox (higher token limit)
-app.post('/api/mainbox', async (req, res) => {
-  const { prompt } = req.body;
-
-  if (!prompt || typeof prompt !== 'string') {
-    return res.status(400).json({ error: 'Invalid prompt' });
-  }
-
-  const messages = [
-    generateSystemMessage('You are a high-level assistant providing detailed responses.'),
-    generateUserMessage(prompt),
-  ];
-
-  // Call the OpenAI API for the mainbox with a higher token limit
-  try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-3.5-turbo',
-        messages,
-        max_tokens: 1000,  // Higher token limit for mainbox
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    const message = response.data.choices[0].message.content.trim();
-    res.json({ message });
-  } catch (error) {
-    console.error('Error with OpenAI API:', error.response?.data || error.message);
-    res.status(500).json({ error: 'Error with mainbox prediction' });
-  }
-});
 
 // POST route for other predictions (lower token limit)
 app.post('/api/predict', async (req, res) => {
@@ -85,7 +48,7 @@ app.post('/api/predict', async (req, res) => {
       ];
       break;
 
-    case trimmedPrompt.startsWith('summarize'):
+    case trimmedPrompt.startsWith('@summarize'):
       const textToSummarize = prompt.trim().substring(9).trim();
       messages = [
         generateSystemMessage('You are an assistant that summarizes texts.'),
