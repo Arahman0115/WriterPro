@@ -3,6 +3,10 @@ import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import errorHandler from './errorHandler.js';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import { validateSearchTerm, validatePrompt } from './validators.js';
 
 // Configure dotenv to load variables from the .env file
 dotenv.config();
@@ -13,6 +17,22 @@ const bingApiKey = process.env.BING_API_KEY;
 
 app.use(cors());
 app.use(express.json());
+
+// Apply to all requests
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+
+app.use(limiter);
+
+// Add this before your routes
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
 
 // Helper function to generate system and user messages
 const generateSystemMessage = (context) => ({
@@ -28,7 +48,7 @@ const generateUserMessage = (content) => ({
 // POST route for mainbox (higher token limit)
 
 // POST route for other predictions (lower token limit)
-app.post('/api/predict', async (req, res) => {
+app.post('/api/predict', validatePrompt, async (req, res) => {
   const { prompt } = req.body;
 
   if (!prompt || typeof prompt !== 'string') {
@@ -93,7 +113,7 @@ app.post('/api/predict', async (req, res) => {
 });
 
 
-app.post('/api/search', async (req, res) => {
+app.post('/api/search', validateSearchTerm, async (req, res) => {
   const { searchTerm } = req.body;
 
   if (!searchTerm || typeof searchTerm !== 'string') {
@@ -126,3 +146,8 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Add this after your routes
+app.use(errorHandler);
+
+app.use(helmet());

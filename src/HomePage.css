@@ -612,9 +612,14 @@ h1 {
     text-align: center;
 }
 
+.spinner-container {
+    margin-left: 100px;
+    margin-top: 100px;
+}
+
 .modal h2 {
     margin-top: 0;
-    color: var(--primary-purple);
+    color: #1882fc;
     font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
 }
 
@@ -633,7 +638,7 @@ h1 {
 }
 
 .confirm-btn {
-    background-color: #0524f0;
+    background-color: #1882fc;
     color: #fff;
     border-radius: 5px;
     font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
@@ -646,7 +651,7 @@ h1 {
 }
 
 .confirm-btn:hover {
-    background-color: #0018b3;
+    background-color: #0d5fbb;
     scale: 1.1;
     font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
 }

@@ -402,8 +402,15 @@
 
 .spinnerbox {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    margin-left: 25px;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Optional: adds a semi-transparent overlay */
 }
 
 .spinner {
@@ -413,11 +420,6 @@
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
-    position: relative;
-    top: 50%;
-    left: 10%;
-    transform: translate(-90%, -50%);
-    z-index: 1000;
 }
 
 @keyframes spin {

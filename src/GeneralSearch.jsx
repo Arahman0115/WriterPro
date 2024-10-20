@@ -61,13 +61,14 @@ const GeneralSearch = () => {
     const handleSelectProject = async (project) => {
         if (selectedArticle) {
             try {
-                await addDoc(collection(db, 'users', userUid, 'projects', project.id, 'webarticles'), {
+                await addDoc(collection(db, 'users', userUid, 'projects', project.id, 'researcharticles'), {
                     title: selectedArticle.title,
                     description: selectedArticle.description,
                     url: selectedArticle.url,
                     createdAt: new Date()
                 });
                 console.log('Article added to project successfully!');
+                // Optionally, you can show a success message to the user here
             } catch (error) {
                 console.error("Error adding article to project:", error);
                 alert('Failed to add article to project. Please try again.');
@@ -75,6 +76,7 @@ const GeneralSearch = () => {
             setShowPopup(false);
         }
     };
+
 
     const handleHomePress = () => {
         navigate('/Homepage');

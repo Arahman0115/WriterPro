@@ -156,7 +156,9 @@ const HomePage = () => {
         <h2>Recent Documents</h2>
         <div className="projects-grid">
           {loading ? (
-            <Spinner /> // Use the Spinner component here
+            <div className="spinner-container">
+              <Spinner />
+            </div>
           ) : filteredProjects.length === 0 ? (
             <p>No projects found. Click "New Blank Document" to create a new project.</p>
           ) : (
