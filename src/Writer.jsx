@@ -179,13 +179,19 @@ const Writer = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3000/api/predict', {
+      const response = await fetch('https://writerprobackend-a98d0d5d6c74.herokuapp.com/api/predict', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Origin': 'http://localhost:5173'  // Add this line
+        },
         body: JSON.stringify({ prompt }),
       });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      if (response.ok && data.message) {
+      if (data.message) {
         setSuggestion(data.message);
       } else {
         setSuggestion('');
@@ -194,9 +200,10 @@ const Writer = () => {
     } catch (error) {
       setSuggestion('');
       console.error('Error fetching prediction:', error);
+      // Optionally, show a user-friendly error message
+      alert('Failed to get suggestion. Please try again later.');
     }
   };
-
   const handleKeyCommand = (command, editorState) => {
     if (command === 'insert-suggestion' && suggestion) {
       const newState = Modifier.insertText(
