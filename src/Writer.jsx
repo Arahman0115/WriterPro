@@ -302,49 +302,42 @@ const Writer = () => {
 
   return (
     <div className="writer-container">
-      <div className="writer" style={{ transform: 'scale(0.95)', transformOrigin: 'center' }}>
-        <div className='feedback-container'>
-          {feedbackMessage && <div className="feedback-message">{feedbackMessage}</div>}
-        </div>
-        <div className="title-section">
-          {isTitleEditing ? (
-            <input
-              type="text"
-              className="title-input"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={handleTitleBlur}
-              onKeyDown={handleTitleKeyDown}
-              autoFocus
+      <div className="writer-main">
+        <div className="writer">
+          <div className='feedback-container'>
+            {feedbackMessage && <div className="feedback-message">{feedbackMessage}</div>}
+          </div>
+          <div className="title-section">
+            {isTitleEditing ? (
+              <input
+                type="text"
+                className="title-input"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={handleTitleBlur}
+                onKeyDown={handleTitleKeyDown}
+                autoFocus
+              />
+            ) : (
+              <h2 className="project-title" onClick={() => setIsTitleEditing(true)}>
+                {title || 'Click to set title'}
+              </h2>
+            )}
+          </div>
+          <div className="writing-area-container">
+            <Editor
+              editorState={sections[activeSection].content}
+              onChange={handleChange}
+              handleKeyCommand={handleKeyCommand}
+              keyBindingFn={keyBindingFn}
             />
-          ) : (
-            <h2 className="project-title" onClick={() => setIsTitleEditing(true)}>
-              {title || 'Click to set title'}
-            </h2>
-          )}
-        </div>
-        <div className="writing-area-container">
-          <Editor
-            editorState={sections[activeSection].content}
-            onChange={handleChange}
-            handleKeyCommand={handleKeyCommand}
-            keyBindingFn={keyBindingFn}
-          />
-        </div>
-        <div className="character-count">
-          Character Count: {sections[activeSection].content.getCurrentContent().getPlainText('').length}
+          </div>
+          <div className="character-count">
+            Character Count: {sections[activeSection].content.getCurrentContent().getPlainText('').length}
+          </div>
         </div>
       </div>
       <div className='outlinenassistant'>
-        <div>
-          <div className="suggestion-overlay">
-            <h2 className='sugtitle'>WriterPro Assistant</h2>
-            {!isEditing && suggestion && <span className="suggestion">{suggestion}</span>}
-            <div className='spinnerbox'>
-              {isEditing && <Spinner />}
-            </div>
-          </div>
-        </div>
         <div className="outline-box">
           <h2>Outline</h2>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -378,6 +371,13 @@ const Writer = () => {
               onChange={(e) => setNewSection(e.target.value)}
             />
             <button onClick={() => handleAddSection(newSection)}>Add</button>
+          </div>
+        </div>
+        <div className="suggestion-overlay">
+          <h2 className='sugtitle'>WriterPro Assistant</h2>
+          {!isEditing && suggestion && <span className="suggestion">{suggestion}</span>}
+          <div className='spinnerbox'>
+            {isEditing && <Spinner />}
           </div>
         </div>
       </div>
