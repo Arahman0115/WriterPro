@@ -7,7 +7,7 @@ import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './GeneralSearch.css';
 import { ChevronLeft } from 'lucide-react';
-import { VITE_API_URL } from '../.env';
+
 
 const GeneralSearch = () => {
     const [searchTerm, setSearchTerm] = useState('');

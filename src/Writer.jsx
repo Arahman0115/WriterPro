@@ -12,7 +12,6 @@ import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveContent } from './contentManager';
 import { Editor, EditorState, ContentState, Modifier, CompositeDecorator, getDefaultKeyBinding } from 'draft-js';
-import { VITE_API_URL } from '../.env';
 import 'draft-js/dist/Draft.css';
 
 const Writer = () => {
