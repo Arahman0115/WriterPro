@@ -2,111 +2,145 @@
 .settings-page-container {
     background-color: #000000;
     color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* Center content horizontally */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-    transition: all 0.3s ease;
+    min-height: 100vh;
+    padding: 40px;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    box-sizing: border-box;
 }
 
 /* Styles for headings in the settings page */
-.settings-page-container h1,
-.settings-page-container h2 {
+.settings-header {
     color: #1882fc;
-    /* Blue color for headings */
-    margin-bottom: 15px;
-    text-align: center;
-    /* Center headings */
+    text-align: left;
+    font-size: 2.5em;
+    font-weight: 300;
+    margin-bottom: 40px;
 }
 
-/* Styles for input fields and select elements in the settings page */
-.settings-page-container input[type="text"],
-.settings-page-container input[type="email"],
-.settings-page-container select {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #1882fc;
-    border-radius: 5px;
-    background-color: #333;
-    /* Dark background for input */
-    color: #fff;
-    font-size: 1rem;
-    /* Adjust font size as needed */
+/* Styles for content in the settings page */
+.settings-content {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-/* Styles for buttons in the settings page */
-.settings-page-container button {
-    background-color: #1a1a1a;
-    border: 2px solid #1882fc;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    /* Adjust font size as needed */
-    transition: background-color 0.3s ease;
+/* Styles for sections in the settings page */
+.settings-section {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
 }
 
-/* Styles for button hover effect */
-.settings-page-container button:hover {
-    background-color: #357ab7;
-    /* Darker shade on hover */
-}
-
-/* Specific styling for profile settings section */
-.profile-settings {
+/* Styles for headings in sections */
+.settings-section h2 {
+    color: #1882fc;
+    font-size: 1.5em;
     margin-bottom: 20px;
-    /* Add margin for spacing */
     display: flex;
-    flex-direction: column;
-    /* Arrange elements vertically */
     align-items: center;
-    /* Center content horizontally */
-    width: 350px;
-    /* Adjust width as needed */
 }
 
-/* Specific styling for writing bot settings section */
-.bot-settings {
+/* Styles for SVG icons in headings */
+.settings-section h2 svg {
+    margin-right: 10px;
+}
+
+/* Styles for form groups */
+.form-group {
     margin-bottom: 20px;
-    /* Add margin for spacing */
-    display: flex;
-    flex-direction: column;
-    /* Arrange elements vertically */
-    align-items: center;
-    /* Center content horizontally */
-    width: 350px;
-    /* Adjust width as needed */
 }
 
-.profile-settings label,
-.bot-settings label {
+/* Styles for form group labels */
+.form-group label {
     display: block;
     margin-bottom: 5px;
-    font-size: 1rem;
+    color: #b3b3b3;
 }
 
-.profile-settings input[type="file"],
-.bot-settings input[type="checkbox"] {
-    margin-top: 5px;
-    margin-bottom: 10px;
+/* Styles for form group input fields and select elements */
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    background-color: #252525;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1em;
 }
 
-/* Home Button Styling */
+/* Styles for file input wrappers */
+.file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
 
-.settings-home-button1 {
-    background-color: #fff6f6;
-    color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* Styles for file input elements */
+.file-input-wrapper input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+/* Styles for file input labels */
+.file-input-label {
+    background-color: #1882fc;
+    color: #fff;
     padding: 10px 15px;
     border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
 
-    align-self: flex-start;
+/* Styles for SVG icons in file input labels */
+.file-input-label svg {
+    margin-right: 5px;
+}
+
+/* Styles for checkbox groups */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+/* Styles for checkbox elements */
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Styles for update buttons */
+.update-button {
+    background-color: #1882fc;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+/* Styles for update button hover effect */
+.update-button:hover {
+    background-color: #1565c0;
+}
+
+/* Styles for home buttons */
+.settings-home-button {
+    background-color: transparent;
+    border: 2px solid #1882fc;
+    color: #1882fc;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.3s ease;
+}
+
+.settings-home-button:hover {
+    background-color: #1882fc;
+
 }

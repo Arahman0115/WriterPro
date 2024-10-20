@@ -1,41 +1,33 @@
-.spinner {
-    width: 40px;
-    /* Adjust the size */
-    height: 40px;
-    position: relative;
-    margin-top: 300px;
-
-    left: 20%;
-    margin: auto;
-}
-
-.double-bounce1,
-.double-bounce2 {
-    width: 100%;
-    height: 100%;
-    border-radius: 70%;
-    background-color: #000000;
-    color: #1882fc;
-    /* Change this to your accent color */
+.spinnerbox {
     position: absolute;
-    top: 0;
-    left: 0;
-    animation: bounce 2.0s infinite ease-in-out;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.double-bounce2 {
-    animation-delay: -1.0s;
-    /* Delay for the second bounce */
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-@keyframes bounce {
+.spinner::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #1882fc;
+    animation: dot 1s infinite;
+}
+
+@keyframes dot {
 
     0%,
     100% {
-        transform: scale(0.0);
+        opacity: 0;
     }
 
     50% {
-        transform: scale(1.0);
+        opacity: 1;
     }
 }

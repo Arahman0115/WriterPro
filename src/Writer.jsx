@@ -1,43 +1,22 @@
+import 'global';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './Writer.css';
 import Toolbar from './Toolbar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useLocation } from 'react-router-dom';
 import { db, auth } from './firebase';
-import { collection, addDoc, setDoc, getDocs, doc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { debounce } from 'lodash';
 import Spinner from './Spinner';
-import MainBox from './MainBox';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveContent } from './contentManager';
+import { Editor, EditorState, ContentState, Modifier, CompositeDecorator, getDefaultKeyBinding } from 'draft-js';
 
-
-const formatCitation = (citation) => {
-  const { title, author, url } = citation;
-  let formattedAuthor = author;
-
-  // Check if the author name contains a comma
-  if (author.includes(',')) {
-    const [lastName, firstNamePart] = author.split(',');
-    const firstName = firstNamePart ? firstNamePart.trim().split(' ')[0] : '';
-    formattedAuthor = `${lastName.trim()}, ${firstName}`;
-  } else {
-    // If there's no comma, assume it's in "First Last" format
-    const nameParts = author.split(' ');
-    if (nameParts.length > 1) {
-      formattedAuthor = `${nameParts[nameParts.length - 1]}, ${nameParts[0]}`;
-    }
-    // If it's a single word, use it as is
-  }
-
-  return `${formattedAuthor}. "${title}." ${url}`;
-};
+import 'draft-js/dist/Draft.css';
 
 const Writer = () => {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
   const [isTitleSet, setIsTitleSet] = useState(false);
   const [sectionOrder, setSectionOrder] = useState([]);
   const [suggestion, setSuggestion] = useState('');
@@ -45,36 +24,49 @@ const Writer = () => {
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [activeSection, setActiveSection] = useState('Introduction');
   const [feedbackMessage, setFeedbackMessage] = useState('');
-  const [wordSuggestions, setWordSuggestions] = useState([]);
-  const [isArticlesVisible, setIsArticlesVisible] = useState(false); // State for the articles panel
-  const [articles, setArticles] = useState([]); // State for storing articles
-  const [isSidePanelVisible, setIsSidePanelVisible] = useState(false);
-  const [styledBlocks, setStyledBlocks] = useState([]);
-
+  const [isArticlesVisible, setIsArticlesVisible] = useState(false);
+  const [articles, setArticles] = useState([]);
 
   const navigate = useNavigate();
   const [sections, setSections] = useState({
-    Introduction: { id: 'section-1', content: '' },
-    Body: { id: 'section-2', content: '' },
-    Conclusion: { id: 'section-3', content: '' }
+    Introduction: { id: 'section-1', content: EditorState.createEmpty() },
+    Body: { id: 'section-2', content: EditorState.createEmpty() },
+    Conclusion: { id: 'section-3', content: EditorState.createEmpty() }
   });
   const [newSection, setNewSection] = useState('');
   const location = useLocation();
   const user = auth.currentUser;
   const suggestionTimeoutRef = useRef(null);
   const saveTimeoutRef = useRef(null);
-  const query = new URLSearchParams(location.search);
-  const template = query.get('template');
+
+  const triggerWordStrategy = (contentBlock, callback, contentState) => {
+    const text = contentBlock.getText();
+    const regex = /@(template|summarize)\b/gi;
+    let matchArr, start;
+    while ((matchArr = regex.exec(text)) !== null) {
+      start = matchArr.index;
+      callback(start, start + matchArr[0].length);
+    }
+  };
+
+  const TriggerWordSpan = (props) => {
+    return <span className="styled-block">{props.children}</span>;
+  };
+
+  const decorator = new CompositeDecorator([
+    {
+      strategy: triggerWordStrategy,
+      component: TriggerWordSpan,
+    },
+  ]);
 
   useEffect(() => {
     const fetchArticles = async () => {
       const project = location.state?.project;
-      console.log('Current project:', project); // Debugging line
       if (user && project) {
         try {
           const articlesCollection = collection(db, `users/${user.uid}/projects/${project.id}/researcharticles`);
           const articlesSnapshot = await getDocs(articlesCollection);
-          console.log('Articles snapshot:', articlesSnapshot); // Debugging line
           const articlesList = articlesSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
@@ -95,32 +87,26 @@ const Writer = () => {
       if (project) {
         const { title, sections, sectionOrder, articles } = project;
         setTitle(title);
-        setSections(sections);
-        setSectionOrder(sectionOrder || Object.keys(sections)); // Use stored sectionOrder if available
+        setSections(Object.entries(sections).reduce((acc, [key, value]) => {
+          acc[key] = {
+            ...value,
+            content: EditorState.createWithContent(
+              ContentState.createFromText(value.content),
+              decorator
+            )
+          };
+          return acc;
+        }, {}));
+        setSectionOrder(sectionOrder || Object.keys(sections));
         setIsTitleSet(!!title);
         setArticles(articles || []);
       } else {
-        // Fetch from Firestore if project isn't found in location.state
-        const db = getFirestore();
-        const docRef = doc(db, "collectionName", "docId"); // Replace with your collection/doc ID
-        const docSnap = await getDocs(docRef);
-
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setSections(data.sections);
-          setSectionOrder(data.sectionOrder || Object.keys(data.sections));
-          // ... set other state variables
-        } else {
-          console.log("No such document!");
-          // Set default if Firestore fails
-          setSectionOrder(['Introduction', 'Body', 'Conclusion']);
-        }
+        setSectionOrder(['Introduction', 'Body', 'Conclusion']);
       }
     };
 
     fetchSectionOrder();
   }, [location]);
-
 
   const handleExportAsMicrosoftWord = () => {
     const content = combineSections(); // Combine all section contents
@@ -147,103 +133,43 @@ const Writer = () => {
     });
   };
 
-
-
-
-
-  const handleDownload = () => {
-    const content = combineSections(); // Combine all section contents
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${title || 'Untitled'}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);  // Clean up
-    URL.revokeObjectURL(url);  // Free up memory
-  };
-  // Debounced content saving to Firebase
-  // Debounced content saving to Firebase
-  const saveContent = useCallback(
-    debounce(async (user, project, updatedSections, sectionOrder, title, articles) => {
-      const currentProject = {
-        title,
-        sections: updatedSections,
-        sectionOrder,
-        lastEdited: Date.now(),
-        articles
-      };
-
-      if (user) {
-        try {
-          if (project?.id) {
-            const docRef = doc(db, `users/${user.uid}/projects`, project.id);
-            await setDoc(docRef, currentProject, { merge: true });
-            setTimeout(() => setFeedbackMessage('Saved'), 5000); // 5 second delay
-          } else {
-            const newDocRef = await addDoc(collection(db, `users/${user.uid}/projects`), currentProject);
-            navigate(`/writer`, { state: { project: { ...currentProject, id: newDocRef.id } } });
-            setTimeout(() => setFeedbackMessage('Saved'), 5000); // 5 second delay
-          }
-        } catch (e) {
-          console.error("Error saving document: ", e);
-          setFeedbackMessage('Error saving');
-        }
-      } else {
-        console.log('User is not authenticated');
-        setFeedbackMessage('Not logged in');
-      }
-    }, 4000),
-    [navigate]
-  );
-  // Handle text change and word suggestions
-  const handleChange = (e) => {
-    const value = e.target.value;
+  const handleChange = (editorState) => {
     const updatedSections = {
       ...sections,
-      [activeSection]: { ...sections[activeSection], content: value },
+      [activeSection]: { ...sections[activeSection], content: editorState },
     };
     setSections(updatedSections);
     setIsEditing(true);
     setFeedbackMessage('Editing...');
 
-    // Detect trigger words and create styled blocks
-    const triggerWords = ['@template', '@summarize'];
-    const words = value.split(' ');
-    const newStyledBlocks = [];
-
-    words.forEach((word, index) => {
-      if (triggerWords.includes(word.toLowerCase())) {
-        newStyledBlocks.push({
-          word,
-          start: value.indexOf(word),
-          end: value.indexOf(word) + word.length,
-        });
-      }
-    });
-
-    setStyledBlocks(newStyledBlocks);
     if (suggestionTimeoutRef.current) {
       clearTimeout(suggestionTimeoutRef.current);
     }
 
     suggestionTimeoutRef.current = setTimeout(() => {
       setIsEditing(false);
-      handleTextCompletion(value);
+      handleTextCompletion(editorState.getCurrentContent().getPlainText());
     }, 4000);
 
-    // Clear the previous save timeout if it exists
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
 
-    // Set a new save timeout for 4 seconds
     saveTimeoutRef.current = setTimeout(() => {
-      saveContent(user, location.state?.project, updatedSections, sectionOrder, title, articles);
+      const contentToSave = Object.entries(updatedSections).reduce((acc, [key, value]) => {
+        acc[key] = {
+          ...value,
+          content: value.content.getCurrentContent().getPlainText()
+        };
+        return acc;
+      }, {});
+      saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
       setFeedbackMessage('Saving...');
-      console.log('Saving changes...');
+      // Set a timeout to change the feedback message to "Saved" after a short delay
+      setTimeout(() => {
+        setFeedbackMessage('Saved');
+        // Clear the "Saved" message after 3 seconds
+      }, 4000); // Adjust this delay as needed
     }, 4000);
   };
 
@@ -271,61 +197,86 @@ const Writer = () => {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Tab' && suggestion) {
-      e.preventDefault();
-      const currentContent = sections[activeSection].content;
-      const words = currentContent.split(' ');
-
-      // Check if the last word is a trigger
-      const lastWord = words[words.length - 1].trim();
-
-
-      // If no trigger word, append the suggestion
-      words.push(suggestion);
-
-
-      const updatedSections = {
-        ...sections,
-        [activeSection]: {
-          ...sections[activeSection],
-          content: words.join(' ') + ' ',
-        },
-      };
-      setSections(updatedSections);
-
+  const handleKeyCommand = (command, editorState) => {
+    if (command === 'insert-suggestion' && suggestion) {
+      const newState = Modifier.insertText(
+        editorState.getCurrentContent(),
+        editorState.getSelection(),
+        suggestion
+      );
+      handleChange(EditorState.push(editorState, newState, 'insert-characters'));
       setSuggestion('');
+      return 'handled';
     }
+    return 'not-handled';
+  };
+
+  const keyBindingFn = (e) => {
+    if (e.keyCode === 9 && !e.shiftKey && suggestion) { // 9 is the keyCode for Tab
+      e.preventDefault();
+      return 'insert-suggestion';
+    }
+    return getDefaultKeyBinding(e);
   };
 
   const handleTitleBlur = () => {
-    if (title.trim()) {
-      setIsTitleEditing(false);
-      setIsTitleSet(true);
-
-    }
+    setIsTitleEditing(false);
+    setIsTitleSet(!!title);
   };
+
   const handleTitleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleTitleBlur();
-
     }
   };
 
-  // Switch sections
   const switchSection = (sectionName) => {
-    if (sections[sectionName]) {
-      setActiveSection(sectionName);
-      setTimeout(() => saveContent(user, location.state?.project, sections, sectionOrder, title, articles), 1000);
+    setActiveSection(sectionName);
+  };
+
+  const handleAddSection = (sectionName, content = '') => {
+    if (sectionName && !sections[sectionName]) {
+      const newSections = {
+        ...sections,
+        [sectionName]: {
+          id: `section-${Object.keys(sections).length + 1}`,
+          content: EditorState.createWithContent(ContentState.createFromText(content), decorator)
+        }
+      };
+      setSections(newSections);
+      setSectionOrder([...sectionOrder, sectionName]);
+      setNewSection('');
     }
   };
 
-  // Handle section drag-and-drop
-  const gotowriter = () => {
-    navigate('/writer', { state: { project: null } }); // or simply omit state if not needed
-  }
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
 
-  // Add a new section
+    const items = Array.from(sectionOrder);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setSectionOrder(items);
+  };
+
+  const handleDownload = () => {
+    const content = combineSections(); // Combine all section contents
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title || 'Untitled'}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);  // Clean up
+    URL.revokeObjectURL(url);  // Free up memory
+  };
+
+  const toggleArticlesVisibility = () => {
+    setIsArticlesVisible(prevState => !prevState);
+  };
+
   const handleCitationManagerClick = () => {
     if (user && location.state?.project) {
       const { project } = location.state;
@@ -343,54 +294,10 @@ const Writer = () => {
     }
   };
 
-  const handleAddSection = (sectionName, content = '') => {
-    if (sectionName.trim()) {
-      if (sections[sectionName]) {
-        // Update the existing section with new content
-        const updatedSections = {
-          ...sections,
-          [sectionName]: {
-            ...sections[sectionName],
-            content: `${sections[sectionName].content}\n\n${content}` // Append new content
-          }
-        };
-        setSections(updatedSections);
-      } else {
-        // Create a new section if it doesn't exist
-        const newId = `section-${Object.keys(sections).length + 1}`;
-        const updatedSections = {
-          ...sections,
-          [sectionName]: { id: newId, content: content }
-        };
-        setSections(updatedSections);
-        setSectionOrder([...sectionOrder, sectionName]);
-      }
-      setNewSection('');
-      // Set the active section to the newly added or updated section
-      setActiveSection(sectionName);
-    }
-  };
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
-
-    const items = Array.from(sectionOrder);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setSectionOrder(items);
-
-    // Save the updated order
-    saveContent(user, location.state?.project, sections, items, title, articles);
-  };
-
-  const toggleArticlesVisibility = () => {
-    setIsArticlesVisible(prevState => !prevState);
-  };
-
   return (
     <div className="writer-container">
       <div className="writer" style={{ transform: 'scale(0.95)', transformOrigin: 'center' }}>
-        <div className='feedbackbox'>
+        <div className='feedback-container'>
           {feedbackMessage && <div className="feedback-message">{feedbackMessage}</div>}
         </div>
         <div className="title-section">
@@ -410,16 +317,16 @@ const Writer = () => {
             </h2>
           )}
         </div>
-        <textarea
-          className="writing-area"
-          placeholder={`Write your ${activeSection} here...`}
-          value={sections[activeSection]?.content || ''}
-          onChange={handleChange}
-          onKeyDown={(e) => e.key === 'Tab' && suggestion && handleKeyDown(e)}
-          disabled={!isTitleSet}
-        />
+        <div className="writing-area-container">
+          <Editor
+            editorState={sections[activeSection].content}
+            onChange={handleChange}
+            handleKeyCommand={handleKeyCommand}
+            keyBindingFn={keyBindingFn}
+          />
+        </div>
         <div className="character-count">
-          Character Count: {(sections[activeSection]?.content || '').replace(/\s+/g, '').length}
+          Character Count: {sections[activeSection].content.getCurrentContent().getPlainText('').length}
         </div>
       </div>
       <div className='outlinenassistant'>
@@ -469,8 +376,17 @@ const Writer = () => {
         </div>
       </div>
       <Toolbar
-        onNewClick={() => gotowriter()}
-        onSaveClick={() => saveContent(user, location.state?.project, sections, sectionOrder, title, articles)}
+        onNewClick={() => navigate('/writer')}
+        onSaveClick={() => {
+          const contentToSave = Object.entries(sections).reduce((acc, [key, value]) => {
+            acc[key] = {
+              ...value,
+              content: value.content.getCurrentContent().getPlainText()
+            };
+            return acc;
+          }, {});
+          saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
+        }}
         onDownloadClick={handleDownload}
         onExportWordClick={handleExportAsMicrosoftWord}
         onShowArticlesClick={toggleArticlesVisibility}

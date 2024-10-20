@@ -75,16 +75,17 @@
     margin-right: 20vw;
     margin-top: 15px;
     font-size: 2rem;
-    /* Adjust the size as needed */
-    font-weight: bold;
-    color: #ffffff;
+    font-weight: 300;
+    color: #1882fc;
+
+
     /* Main text color */
     text-shadow:
-        1px 1px 0 rgba(0, 0, 0, 0.5),
+        1px 1px 0 rgba(6, 12, 193, 0.5),
         /* Light shadow */
-        2px 2px 0 rgba(0, 0, 0, 0.4),
-        3px 3px 0 rgba(0, 0, 0, 0.3),
-        4px 4px 0 rgba(0, 0, 0, 0.2),
+        2px 2px 0 rgba(33, 47, 155, 0.4),
+        3px 3px 0 rgba(0, 1, 45, 0.3),
+        4px 4px 0 rgba(2, 157, 240, 0.2),
         5px 5px 0 rgba(0, 0, 0, 0.1);
     /* Gradient shadow effect */
 

@@ -74,7 +74,7 @@ const HomePage = () => {
       const updatedProjects = projects.filter((_, index) => index !== deleteIndex);
       setProjects(updatedProjects);
       setIsModalOpen(false);
-      setFeedbackMessage('Project successfully deleted!');
+
       setTimeout(() => setFeedbackMessage(''), 5000);
     }
   };

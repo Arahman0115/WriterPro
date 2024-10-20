@@ -5,7 +5,7 @@ import { storage } from './firebase'; // Import your Firebase storage setup
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import required functions from Firebase storage
 import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore functions
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, User, Bot, Upload } from 'lucide-react';
 
 const SettingsPage = () => {
     const { currentUser, updateProfile } = useAuth(); // Make sure to include updateProfile from AuthContext
@@ -84,79 +84,84 @@ const SettingsPage = () => {
         navigate('/Homepage');
     }
 
-
     return (
         <div className="settings-page-container">
-            <button onClick={handleSetHomeClick} className="settings-home-button1">  <ChevronLeft size={20} /> </button>
-            <h1>Settings Page</h1>
+            <button onClick={handleSetHomeClick} className="settings-home-button">
+                <ChevronLeft size={20} />
+            </button>
+            <h1 className="settings-header">Settings</h1>
 
-            {/* User Profile Settings */}
-            <div className="profile-settings">
-                <h2>User Profile</h2>
-                <form onSubmit={handleProfileUpdate}>
-                    <div>
-                        <label htmlFor="name">Name:</label>
-                        <input
-                            type="text"
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-                    {/* Removed email field to prevent changes */}
-                    <div>
-                        <label htmlFor="profile-pic">Profile Picture:</label>
-                        <input
-                            type="file"
-                            id="profile-pic"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                        />
-                    </div>
-                    <button type="submit">Update Profile</button>
-                </form>
-            </div>
-
-            {/* Writing Bot Settings */}
-            <div className="bot-settings">
-                <h2>Writing Bot Settings</h2>
-                <form onSubmit={handleBotSettingsUpdate}>
-                    <div>
-                        <label htmlFor="tone">Tone:</label>
-                        <select
-                            id="tone"
-                            value={tone}
-                            onChange={(e) => setTone(e.target.value)}
-                        >
-                            <option value="neutral">Neutral</option>
-                            <option value="formal">Formal</option>
-                            <option value="friendly">Friendly</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label htmlFor="language">Language:</label>
-                        <select
-                            id="language"
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value)}
-                        >
-                            <option value="English">English</option>
-                            <option value="Spanish">Spanish</option>
-                            <option value="French">French</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>
+            <div className="settings-content">
+                <div className="settings-section">
+                    <h2><User size={20} /> User Profile</h2>
+                    <form onSubmit={handleProfileUpdate}>
+                        <div className="form-group">
+                            <label htmlFor="name">Name</label>
                             <input
-                                type="checkbox"
-                                checked={suggestions}
-                                onChange={(e) => setSuggestions(e.target.checked)}
+                                type="text"
+                                id="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                             />
-                            Enable Suggestions
-                        </label>
-                    </div>
-                    <button type="submit">Update Bot Settings</button>
-                </form>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="profile-pic">Profile Picture</label>
+                            <div className="file-input-wrapper">
+                                <input
+                                    type="file"
+                                    id="profile-pic"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
+                                <label htmlFor="profile-pic" className="file-input-label">
+                                    <Upload size={20} /> Choose File
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" className="update-button">Update Profile</button>
+                    </form>
+                </div>
+
+                <div className="settings-section">
+                    <h2><Bot size={20} /> Writing Bot Settings</h2>
+                    <form onSubmit={handleBotSettingsUpdate}>
+                        <div className="form-group">
+                            <label htmlFor="tone">Tone</label>
+                            <select
+                                id="tone"
+                                value={tone}
+                                onChange={(e) => setTone(e.target.value)}
+                            >
+                                <option value="neutral">Neutral</option>
+                                <option value="formal">Formal</option>
+                                <option value="friendly">Friendly</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="language">Language</label>
+                            <select
+                                id="language"
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value)}
+                            >
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                            </select>
+                        </div>
+                        <div className="form-group checkbox-group">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={suggestions}
+                                    onChange={(e) => setSuggestions(e.target.checked)}
+                                />
+                                Enable Suggestions
+                            </label>
+                        </div>
+                        <button type="submit" className="update-button">Update Bot Settings</button>
+                    </form>
+                </div>
             </div>
         </div>
     );

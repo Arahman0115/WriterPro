@@ -43,7 +43,7 @@ app.post('/api/predict', async (req, res) => {
     case trimmedPrompt.startsWith('@template'):
       const topic = prompt.trim().substring(15).trim();
       messages = [
-        generateSystemMessage("You are an assistant that provides templates for the topic given."),
+        generateSystemMessage("You are an assistant that provides templates for the topic given. Start with Template: and then provide the template."),
         generateUserMessage(`@template ${topic}.`),
       ];
       break;

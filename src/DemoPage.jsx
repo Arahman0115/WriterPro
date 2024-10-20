@@ -1,63 +1,85 @@
 import React, { useState } from 'react';
 import './DemoPage.css';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, User, Bot, Settings, Zap } from 'lucide-react';
+
 const DemoPage = () => {
-    // State to control which panel is open
     const [activePanel, setActivePanel] = useState(null);
     const navigate = useNavigate();
-    // Function to toggle panel visibility
+
     const togglePanel = (panel) => {
         setActivePanel(activePanel === panel ? null : panel);
     };
+
     const goToLandingPage = () => {
         navigate('/HomePage')
     }
+
     return (
         <div className="demo-container">
-            <button className='homebutton' onClick={goToLandingPage}>
-                <ChevronLeft size={20} />
-            </button>
-            <h1 className="demo-header">Docs</h1>
-            <p className="demo-description">Explore the features of WriterPro by clicking the panels below.</p>
+            <div className="demo-header-container">
+                <button className='homebutton' onClick={goToLandingPage}>
+                    <ChevronLeft size={20} />
+                </button>
+                <h1 className="demo-header">WriterPro Documentation</h1>
+            </div>
+            <p className="demo-description">Discover the power of AI-assisted writing with WriterPro. Explore our features below.</p>
 
             <div className="panel-container">
-                {/* About Panel */}
                 <div className="panel">
                     <div className="panel-title" onClick={() => togglePanel('about')}>
-                        About
+                        <User size={20} />
+                        <span>About WriterPro</span>
                     </div>
                     {activePanel === 'about' && (
                         <div className="panel-content">
-                            <p>WriterPro takes advantage of Artificial Intelligence to help you create. It introduces an AI assistant that will contextually perform text completions, provide templates, and give suggestions on how to improve your writing. </p>
+                            <p>WriterPro harnesses the power of Artificial Intelligence to revolutionize your writing process. Our AI assistant provides contextual text completions, customized templates, and intelligent suggestions to elevate your writing.</p>
+                            <ul>
+                                <li>AI-powered writing assistance</li>
+                                <li>Contextual suggestions</li>
+                                <li>Custom templates</li>
+                                <li>Intelligent text completion</li>
+                            </ul>
                         </div>
                     )}
                 </div>
 
-                {/* How to Use Panel */}
                 <div className="panel">
                     <div className="panel-title" onClick={() => togglePanel('howToUse')}>
-                        How to Use
+                        <Bot size={20} />
+                        <span>How to Use</span>
                     </div>
                     {activePanel === 'howToUse' && (
                         <div className="panel-content">
-                            <p>To initiate a specific task such as the creation of a template, translation, or summary, type
-                                <li>
-                                    @template
-                                </li>
-                                <li>
-                                    @translate
-                                </li>
-                                <li>
-                                    @summary
-                                </li>The task will be completed, and the product will be displayed in the Assistant box.
-                                To place the finished product into your essay, simply press tab.</p>
+                            <p>Unlock WriterPro's features with simple commands:</p>
+                            <ul>
+                                <li><code>@template</code> - Generate a custom template</li>
+                                <li><code>@translate</code> - Translate your text</li>
+                                <li><code>@summary</code> - Summarize your content</li>
+                            </ul>
+                            <p>The AI will process your request and display the result in the Assistant box. To insert the output into your essay, simply press the Tab key.</p>
                         </div>
                     )}
                 </div>
 
-
-
+                <div className="panel">
+                    <div className="panel-title" onClick={() => togglePanel('features')}>
+                        <Zap size={20} />
+                        <span>Key Features</span>
+                    </div>
+                    {activePanel === 'features' && (
+                        <div className="panel-content">
+                            <ul>
+                                <li>AI-powered writing assistance</li>
+                                <li>Custom template generation</li>
+                                <li>Text translation</li>
+                                <li>Content summarization</li>
+                                <li>Intelligent text completion</li>
+                                <li>Real-time writing suggestions</li>
+                            </ul>
+                        </div>
+                    )}
+                </div>
 
             </div>
         </div>
