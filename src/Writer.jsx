@@ -14,6 +14,41 @@ import { saveContent } from './contentManager';
 import { Editor, EditorState, ContentState, Modifier, CompositeDecorator, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 
+const formatCitation = (article) => {
+  // Basic MLA format: Author(s). "Title of Source." Title of Container, Other contributors, Version, Number, Publisher, Publication Date, Location.
+  let citation = '';
+
+  // Author
+  if (article.author) {
+    citation += `${article.author}. `;
+  }
+
+  // Title
+  if (article.title) {
+    citation += `"${article.title}." `;
+  }
+
+  // We don't have all MLA fields, so we'll add what we have
+  if (article.journal) {
+    citation += `${article.journal}, `;
+  }
+
+  // Publication date (assuming it's available)
+  if (article.publicationDate) {
+    citation += `${article.publicationDate}, `;
+  }
+
+  // URL
+  if (article.url) {
+    citation += `${article.url}. `;
+  }
+
+  // Access date (current date)
+  citation += `Accessed ${new Date().toLocaleDateString()}.`;
+
+  return citation;
+};
+
 const Writer = () => {
   const [title, setTitle] = useState('');
   const [isTitleSet, setIsTitleSet] = useState(false);
@@ -90,17 +125,19 @@ const Writer = () => {
           acc[key] = {
             ...value,
             content: EditorState.createWithContent(
-              ContentState.createFromText(value.content),
+              ContentState.createFromText(value.content || ''),
               decorator
             )
           };
           return acc;
         }, {}));
         setSectionOrder(sectionOrder || Object.keys(sections));
+        setActiveSection(sectionOrder?.[0] || 'Introduction');  // Set a default active section
         setIsTitleSet(!!title);
         setArticles(articles || []);
       } else {
         setSectionOrder(['Introduction', 'Body', 'Conclusion']);
+        setActiveSection('Introduction');  // Set a default active section
       }
     };
 
@@ -237,20 +274,25 @@ const Writer = () => {
   };
 
   const switchSection = (sectionName) => {
-    setActiveSection(sectionName);
+    if (sections[sectionName]) {
+      setActiveSection(sectionName);
+    } else {
+      console.error(`Section ${sectionName} does not exist`);
+      // Optionally, set a default section or show an error message
+    }
   };
 
   const handleAddSection = (sectionName, content = '') => {
     if (sectionName && !sections[sectionName]) {
-      const newSections = {
-        ...sections,
+      setSections(prevSections => ({
+        ...prevSections,
         [sectionName]: {
-          id: `section-${Object.keys(sections).length + 1}`,
-          content: EditorState.createWithContent(ContentState.createFromText(content), decorator)
+          id: `section-${Object.keys(prevSections).length + 1}`,
+          content: EditorState.createWithContent(ContentState.createFromText(content))
         }
-      };
-      setSections(newSections);
-      setSectionOrder([...sectionOrder, sectionName]);
+      }));
+      setSectionOrder(prevOrder => [...prevOrder, sectionName]);
+      setActiveSection(sectionName);
       setNewSection('');
     }
   };
@@ -284,19 +326,21 @@ const Writer = () => {
   };
 
   const handleCitationManagerClick = () => {
-    if (user && location.state?.project) {
-      const { project } = location.state;
-      const citations = project.articles.map(article => ({
-        title: article.title,
-        author: article.author,
-        url: article.url
-      }));
-
-      const mlaCitations = citations.map(formatCitation);
+    if (articles.length > 0) {
+      const mlaCitations = articles.map(formatCitation);
       const citationsContent = mlaCitations.join('\n\n');
 
       // Use handleAddSection to add or update the "Citations" section
       handleAddSection('Citations', citationsContent);
+
+      // Switch to the newly created or updated Citations section
+      switchSection('Citations');
+
+      setFeedbackMessage('Citations added successfully!');
+      setTimeout(() => setFeedbackMessage(''), 3000);
+    } else {
+      setFeedbackMessage('No articles available for citation.');
+      setTimeout(() => setFeedbackMessage(''), 3000);
     }
   };
   const handleSave = () => {
@@ -372,14 +416,16 @@ const Writer = () => {
             )}
           </div>
           <div className="writing-area-container">
-
-            <Editor
-              editorState={sections[activeSection].content}
-              onChange={handleChange}
-              handleKeyCommand={handleKeyCommand}
-              keyBindingFn={keyBindingFn}
-            />
-
+            {sections[activeSection] ? (
+              <Editor
+                editorState={sections[activeSection].content}
+                onChange={handleChange}
+                handleKeyCommand={handleKeyCommand}
+                keyBindingFn={keyBindingFn}
+              />
+            ) : (
+              <p>No content available for this section.</p>
+            )}
           </div>
           <div className="character-count">
             Character Count: {sections[activeSection].content.getCurrentContent().getPlainText('').length}

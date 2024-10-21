@@ -27,7 +27,7 @@
 }
 
 .writing-area-container::-webkit-scrollbar {
-    width: thin;
+    display: none;
 }
 
 .writing-area-container::-webkit-scrollbar {
@@ -142,7 +142,6 @@
 
 .suggestion-overlay {
     flex: 0 0 20%;
-    /* Adjust width as needed */
     height: auto;
     max-height: calc(100vh - var(--toolbar-height) - 2rem);
     position: sticky;
@@ -152,59 +151,53 @@
     margin-bottom: 0;
     margin-left: 0;
     border: 2px solid #1882fc;
-    padding: 10px;
+    padding: 20px;
     border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px rgba(24, 130, 252, 0.1);
 }
 
 .sugtitle {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
     color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif, 'Courier New', Courier, monospace;
+    font-family: 'Arial', sans-serif;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     position: relative;
-    /* Required for positioning the pseudo-element */
+
+    letter-spacing: 1px;
 }
 
 .sugtitle::after {
     content: '';
     display: block;
-    width: 105%;
-    justify-self: center;
-    /* Adjust this value to make the underline longer */
-    height: 2px;
-    /* Adjust the thickness of the underline */
+    width: 50px;
+    height: 3px;
     background-color: #1882fc;
-    /* Color of the underline */
     position: absolute;
-    left: -2.3%;
-    /* Adjust this value to center the underline */
-    bottom: -3px;
-    /* Adjust this value to position the underline */
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
 }
 
-.suggestiontitle {
-    bottom: 0;
-    right: 0;
-    margin-bottom: 54vh;
-    margin-right: 6vw;
-    padding: 10px 50px;
-    border-radius: 5px;
-    color: #ffffff;
-    background-color: #000000;
-    position: absolute;
-    font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
-    font-weight: bold;
-    font-size: 22px;
-    border: 2px solid #1882fc;
-}
+
 
 
 
 .suggestion {
     color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 25px;
+
+    border-radius: 3px;
+
+
+
 }
 
 .collapsible-bar {
@@ -266,16 +259,26 @@
     overflow-y: auto;
     border: 2px solid #1882fc;
     border-radius: 10px;
+    padding: 10px;
+}
+
+.outline-box:hover,
+.suggestion-overlay:hover,
+.writing-area-container:hover {
+    box-shadow: 0 8px 20px rgba(32, 73, 251, 0.8);
 }
 
 .styled-block {
-    position: absolute;
+    position: relative;
     font-size: 14px;
     /* Adjust as needed */
     line-height: 20px;
     /* Adjust as needed */
     pointer-events: none;
     z-index: 1;
+    background-color: #1882fc;
+    padding: 5px;
+    border-radius: 5px;
 }
 
 
@@ -335,14 +338,13 @@
 }
 
 .feedback-container {
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: left;
+    position: fixed;
+    top: calc(var(--toolbar-height) + 10px);
+    /* Adjust based on your toolbar height */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
     pointer-events: none;
-    /* This allows clicks to pass through to elements below */
 }
 
 .outline-container {
@@ -353,11 +355,13 @@
 
 .feedback-message {
     background-color: rgba(0, 0, 0, 0.7);
-    color: rgb(96, 93, 93);
+    color: #3e3c3c;
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 14px;
-
+    text-align: left;
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 .new-section input {
@@ -406,37 +410,12 @@
 }
 
 .spinnerbox {
-    position: absolute;
-    top: 0;
-    margin-left: 25px;
-    right: 0;
-    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    /* Optional: adds a semi-transparent overlay */
+    height: 100px;
+    margin-top: 20px;
 }
-
-.spinner {
-    border: 3px solid #1E1E1E;
-    border-top: 3px solid #1882fc;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
 
 .title-section {
     display: flex;

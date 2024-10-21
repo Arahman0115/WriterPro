@@ -137,11 +137,12 @@ const HomePage = () => {
 
         <div className="navbar-right">
           <div className='usernamebox'>
-            Welcome, <span className="user-name">
-              {currentUser?.displayName || currentUser?.email}
-            </span>
+            <span>Welcome, </span>
+            <span className="user-name">{currentUser?.displayName || currentUser?.email}</span>
+            <div className="profile-pic">
+              {/* Profile picture or initials */}
+            </div>
           </div>
-
           <div className="user-dropdown-container">
             {currentUser && <UserDropdown />}
           </div>

@@ -66,7 +66,6 @@ body {
     align-items: center;
     justify-content: flex-end;
     flex-grow: 0;
-    /* Prevent this from growing */
 }
 
 .search-bar {
@@ -80,15 +79,22 @@ body {
 }
 
 .usernamebox {
-    margin-right: 1rem;
-    font-size: 0.9rem;
+    display: flex;
+    align-items: right;
+    margin-right: 0.5rem;
+    font-weight: bold;
+    /* Reduced margin */
+    font-size: 1rem;
     white-space: nowrap;
-    margin-bottom: 10px;
 }
 
 .user-name {
     font-size: 1rem;
     font-weight: bold;
+    margin-right: 1rem;
+    gap: 1rem;
+    margin-left: 0.2rem;
+    /* Added margin to separate name from profile pic */
 }
 
 .profile-pic {
@@ -96,13 +102,21 @@ body {
     height: 40px;
     border-radius: 50%;
     display: flex;
-    align-items: center;
+    align-items: right;
     justify-content: center;
-
     color: #FFFFFF;
     font-weight: bold;
+    margin-left: 0;
+    /* Removed margin-left */
+    order: 2;
+    /* Ensure profile pic comes after text */
 }
 
+.user-dropdown-container {
+    position: relative;
+    z-index: 1000;
+    margin-left: 0.5rem;
+}
 
 .recent-documents-section {
     width: 100%;
@@ -112,8 +126,8 @@ body {
     border: 1px solid var(--secondary-purple);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
     overflow: hidden;
-    min-height: 40vh;
-    max-height: 48vh;
+    min-height: 50vh;
+    max-height: 52vh;
 
     display: flex;
     flex-direction: column;
@@ -412,13 +426,6 @@ body {
     padding: 1rem;
     overflow-y: auto;
     flex-grow: 1;
-}
-
-.user-dropdown-container {
-    position: relative;
-    z-index: 1000;
-    margin-left: auto;
-    /* Push it to the right */
 }
 
 .navbar-middle {
