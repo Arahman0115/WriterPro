@@ -11,8 +11,8 @@ const LandingPage = () => {
             <nav className="landing-nav">
                 <img src={wbg} alt="Home" className="home-icon12" />
                 <div className="nav-links">
-                    <Link to="/login">Log In</Link>
-                    <Link to="/login" state={{ isSignup: true }} className="signup-btn">Sign Up</Link>
+                    <Link to="/login" className="login-btn3">Log In</Link>
+                    <Link to="/login" state={{ isSignup: true }} className="signup-btn3">Sign Up</Link>
                 </div>
             </nav>
             <div className="landing-content">

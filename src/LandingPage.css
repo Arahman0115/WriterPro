@@ -41,24 +41,42 @@ body {
     text-decoration: none;
     margin-left: 1rem;
     position: relative;
-    transition: color 0.3s ease;
+
 }
 
 .nav-links a:hover {
-    color: var(--heading-color);
+    transform: translateY(-3px);
+
 }
 
-.signup-btn {
+
+
+.signup-btn3 {
     background-color: var(--primary-color);
     color: var(--background-color);
-    padding: 0.5rem 1rem;
+    padding: 1rem 1.5rem;
     border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.3s;
+    transition: background-color 1s ease, transform 1s;
     box-shadow: 0 4px 15px rgba(24, 130, 252, 0.4);
 }
 
-.signup-btn:hover {
+.signup-btn3:hover {
     background-color: #005dc8;
+    transform: translateY(-5px);
+}
+
+.login-btn3 {
+    background-color: #000000;
+    color: var(--background-color);
+    box-shadow: 0 4px 15px rgba(31, 31, 31, 0.4);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    transition: background-color 1s ease, transform 0.3s ease;
+
+}
+
+.login-btn3:hover {
+    background-color: #0d0d0d;
     transform: translateY(-3px);
 }
 
