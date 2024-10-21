@@ -305,6 +305,14 @@ body {
     color: #fff;
 }
 
+.confirm-btn:hover {
+    background-color: #0e5aaf;
+}
+
+.cancel-btn:hover {
+    background-color: #949494;
+}
+
 .cancel-btn {
     background-color: #ccc;
 }

@@ -52,7 +52,8 @@
 .toolbar {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
+    /* Increase this value */
     height: var(--toolbar-height);
     /* Add any other toolbar styles here */
 }
@@ -69,8 +70,8 @@
 .writer {
     flex: 1;
     max-height: calc(100vh - var(--toolbar-height) - 1rem);
-    overflow-y: auto;
-    margin-top: 5rem;
+
+    margin-top: 4rem;
 }
 
 .title-input {
@@ -439,28 +440,26 @@
 }
 
 .side-panel {
-    width: 15vw;
-    height: 90vh;
+    position: fixed;
+    top: calc(1vh + var(--toolbar-height));
+    /* Position it just below the toolbar */
+    right: -250px;
+    /* Hide it off-screen initially */
+    width: 250px;
+    height: calc(98vh - var(--toolbar-height));
     background-color: #000000;
     border: 2px solid #1882fc;
-    border-radius: 8px;
-    padding: 15px;
-    position: fixed;
-    top: 6vh;
-    right: -300px;
-    /* Initially position it off-screen */
-    color: #ffffff;
-    overflow-y: auto;
-    z-index: 101;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     transition: right 0.3s ease;
-    /* Smooth transition for sliding effect */
+    overflow-y: auto;
+    z-index: 999;
+    /* Set this to be just below the toolbar */
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
-/* When the side panel is visible */
 .side-panel.visible {
     right: 0;
-    /* Slide in to be fully visible */
 }
 
 /* Title styling */
@@ -507,7 +506,8 @@
     position: fixed;
     top: 70px;
     right: 0;
-    z-index: 11;
+    z-index: 1001;
+    /* Ensure it's above both the toolbar and side panel */
     transition: background-color 0.3s, right 0.3s ease;
     /* Add transition for smooth movement */
 }

@@ -40,41 +40,10 @@ const Toolbar = ({ onNewClick, onSaveClick, onDownloadClick, onExportWordClick, 
         </div>
 
         {/* Edit Menu */}
-        <div
-          className="menu-item"
-          onMouseEnter={() => handleDropdown('edit')}
-          onMouseLeave={() => setActiveDropdown(null)}
-        >
-          Edit
-          {activeDropdown === 'edit' && (
-            <div className="dropdown">
-              <button onClick={() => alert('Undo clicked')}>Undo</button>
-              <button onClick={() => alert('Redo clicked')}>Redo</button>
-              <button onClick={() => alert('Cut clicked')}>Cut</button>
-              <button onClick={() => alert('Copy clicked')}>Copy</button>
-              <button onClick={() => alert('Paste clicked')}>Paste</button>
-            </div>
-          )}
-        </div>
+
 
         {/* Format Menu */}
-        <div
-          className="menu-item"
-          onMouseEnter={() => handleDropdown('format')}
-          onMouseLeave={() => setActiveDropdown(null)}
-        >
-          Format
-          {activeDropdown === 'format' && (
-            <div className="dropdown">
-              <button onClick={() => onFormat('bold')}>Bold</button>
-              <button onClick={() => onFormat('italic')}>Italic</button>
-              <button onClick={() => onFormat('underline')}>Underline</button>
-              <button onClick={() => onFormat('strikethrough')}>Strikethrough</button>
-            </div>
 
-          )}
-
-        </div>
         <div
           className="menu-item"
           onMouseEnter={() => handleDropdown('citation')}
