@@ -49,6 +49,7 @@
     align-items: center;
     gap: 10px;
     background-color: #121111;
+    color: white;
     transition: background-color 0.3s ease;
 }
 

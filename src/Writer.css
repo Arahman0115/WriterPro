@@ -439,7 +439,7 @@
 }
 
 .side-panel {
-    width: 250px;
+    width: 15vw;
     height: 90vh;
     background-color: #000000;
     border: 2px solid #1882fc;
@@ -451,7 +451,7 @@
     /* Initially position it off-screen */
     color: #ffffff;
     overflow-y: auto;
-    z-index: 10;
+    z-index: 101;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     transition: right 0.3s ease;
     /* Smooth transition for sliding effect */
