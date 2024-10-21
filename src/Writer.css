@@ -1,45 +1,76 @@
 :root {
     --primary-color: #1882fc;
-    --background-color: #080808;
-    --secondary-background: #000000;
+    --secondary-color: #BB86FC;
+    --background-color: #29e70c;
+    --secondary-background: #ff0000;
     --text-color: #ffffff;
-    --sidebar-width: 25%;
+    --accent-color: #9A67EA;
+    --border-radius: 10px;
+    --transition-speed: 0.3s;
+    --toolbar-height: 60px;
+}
+
+.body {
+    background-color: #000000;
 }
 
 .writer-container {
     display: flex;
+    flex-direction: column;
     height: 100vh;
-    margin-top: 5vh;
     width: 100%;
-    background-color: var(--background-color);
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #000000;
     overflow: hidden;
+
+}
+
+.writing-area-container::-webkit-scrollbar {
+    width: thin;
+}
+
+.writing-area-container::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the entire scrollbar */
+}
+
+.writing-area-container::-webkit-scrollbar-track {
+    background: #000000;
+    /* Color of the tracking area */
+}
+
+.writing-area-container::-webkit-scrollbar-thumb {
+    background-color: #1882fc;
+    /* Color of the scroll thumb */
+    border-radius: 20px;
+    /* Roundness of the scroll thumb */
+    border: 2px solid #000000;
+    /* Creates padding around scroll thumb */
+}
+
+.toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--toolbar-height);
+    /* Add any other toolbar styles here */
 }
 
 .writer-main {
-    flex: 1;
     display: flex;
-    flex-direction: column;
-    padding: 20px;
-    overflow-y: auto;
-    max-height: 40vh;
+    flex: 1;
+    gap: 1rem;
+    height: calc(100vh - var(--toolbar-height) - 5rem);
+    overflow: hidden;
+
 }
 
 .writer {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--secondary-background);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    border-radius: 15px;
-    border: 2px solid var(--primary-color);
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.title-section {
-    background-color: #000000;
-    border-radius: 5px;
-    width: 100%;
+    max-height: calc(100vh - var(--toolbar-height) - 1rem);
+    overflow-y: auto;
+    margin-top: 5rem;
 }
 
 .title-input {
@@ -59,6 +90,12 @@
     transition: all 0.3s ease;
     font-family: Arial, Helvetica, sans-serif'Courier New', Courier, monospace;
 
+}
+
+.title-section {
+    background-color: #000000;
+    border-radius: 5px;
+    width: 100%;
 }
 
 .title-input:focus {
@@ -93,25 +130,7 @@
     overflow-x: auto;
 }
 
-.writing-area {
-    width: 90%;
-    min-height: 50vh;
-    max-height: 50vh;
-    max-width: 80vw;
-    font-size: 1.1rem;
-    line-height: 1.7;
-    padding: 25px;
-    border: 2px solid #1882fc;
-    border-radius: 10px;
-    background-color: #080808;
-    color: #ffffff;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin: 0 auto;
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
-}
+
 
 .writing-area:focus {
     outline: none;
@@ -122,11 +141,19 @@
 }
 
 .suggestion-overlay {
-    flex: 1;
-    border: 2px solid var(--primary-color);
-    border-radius: 5px;
-    padding: 10px;
+    flex: 0 0 20%;
+    /* Adjust width as needed */
+    height: auto;
+    max-height: calc(100vh - var(--toolbar-height) - 2rem);
+    position: sticky;
+    top: calc(var(--toolbar-height) + 1rem);
+    right: 0;
     overflow-y: auto;
+    margin-bottom: 0;
+    margin-left: 0;
+    border: 2px solid #1882fc;
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .sugtitle {
@@ -228,12 +255,17 @@
 }
 
 .outline-box {
-    flex: 3;
-    border: 2px solid var(--primary-color);
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 20px;
+    flex: 0 0 20%;
+    /* Adjust width as needed */
+    height: auto;
+    max-height: calc(100vh - var(--toolbar-height) - 2rem);
+    margin-bottom: 0;
+    margin-right: 0;
+    position: sticky;
+    top: calc(var(--toolbar-height) + 1rem);
     overflow-y: auto;
+    border: 2px solid #1882fc;
+    border-radius: 10px;
 }
 
 .styled-block {
@@ -246,23 +278,7 @@
     z-index: 1;
 }
 
-.chat-box {
-    background-color: #000000;
-    border: 2px solid #1882fc;
-    border-radius: 8px;
-    padding: 10px;
-    height: 25vh;
-    width: 24%;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin-bottom: 5vh;
-    color: #ffffff;
-    font-size: 16px;
-    overflow-y: auto;
-    margin-right: 2vw;
-}
+
 
 .outline-box h2 {
     font-size: 22px;
@@ -319,7 +335,7 @@
 }
 
 .feedback-container {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     right: 0;
@@ -329,13 +345,19 @@
     /* This allows clicks to pass through to elements below */
 }
 
+.outline-container {
+    background-color: none;
+    width: 100%;
+    z-index: -9;
+}
+
 .feedback-message {
     background-color: rgba(0, 0, 0, 0.7);
     color: rgb(96, 93, 93);
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 14px;
-    margin-top: 10px;
+
 }
 
 .new-section input {
@@ -522,6 +544,8 @@
     /* Move button when panel is visible */
 }
 
+
+
 .articlebox {
     display: flex;
     flex-direction: column;
@@ -535,39 +559,69 @@
 }
 
 .writing-area-container {
-    flex: 1;
-    border: 2px solid var(--primary-color);
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Changed from center to flex-start */
+    border: 2px solid #1882fc;
     border-radius: 10px;
-    overflow: hidden;
+    padding: 20px;
+    align-self: center;
+    overflow-y: auto;
+    /* Add this to enable scrolling if content exceeds container height */
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-    .writer-container {
-        flex-direction: column;
-    }
+/* Add or modify this class to style the Draft.js editor */
+.DraftEditor-root {
+    flex: 1;
+    padding: 5px;
+    /* Add padding around the text */
+    font-size: 16px;
+    /* Adjust font size as needed */
+    line-height: 1.6;
+    /* Adjust line height for better readability */
+    color: #ffffff;
+    /* Ensure text color contrasts with background */
+}
 
-    .outlinenassistant {
-        width: 100%;
-        flex-direction: row;
-        height: 30vh;
-    }
+/* Style the editor content */
+.DraftEditor-editorContainer {
+    height: 100%;
+}
 
-    .outline-box,
-    .suggestion-overlay {
-        flex: 1;
-        margin: 0 10px;
+/* Ensure the text doesn't touch the edges on smaller screens */
+@media (max-width: 768px) {
+    .DraftEditor-root {
+        padding: 15px;
     }
 }
 
 @media (max-width: 768px) {
-    .outlinenassistant {
+    .writer-container {
+        padding: 1rem;
+    }
+
+    .writer-main {
+        padding-top: 0.5rem;
+    }
+
+    .writer {
+        max-height: calc(100vh - var(--toolbar-height) - 1rem);
+    }
+}
+
+@media (max-width: 1024px) {
+    .writer-main {
         flex-direction: column;
-        height: auto;
     }
 
     .outline-box,
     .suggestion-overlay {
-        margin: 10px 0;
+        flex: 0 0 auto;
+        width: 100%;
+        max-height: 30vh;
+        position: static;
     }
 }

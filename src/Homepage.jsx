@@ -17,6 +17,7 @@ const HomePage = () => {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   // Load projects from Firestore and handle potential errors
   useEffect(() => {
@@ -83,6 +84,17 @@ const HomePage = () => {
     setIsModalOpen(false);
   };
 
+  const handleEllipsisClick = (e, index) => {
+    e.stopPropagation();
+    setActiveDropdown(activeDropdown === index ? null : index);
+  };
+
+  const handleDeleteOption = (e, index) => {
+    e.stopPropagation();
+    setDeleteIndex(index);
+    setIsModalOpen(true);
+    setActiveDropdown(null);
+  };
 
   const filteredProjects = projects.filter((project) =>
     project.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -113,9 +125,7 @@ const HomePage = () => {
           <h1 className='writerprotitle'>WriterPro</h1>
         </div>
 
-
-        <div className="navbar-right">
-
+        <div className="navbar-middle">
           <input
             type="text"
             className="search-bar"
@@ -123,14 +133,16 @@ const HomePage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+        </div>
 
+        <div className="navbar-right">
           <div className='usernamebox'>
-            Welcome, <div className="user-name">
+            Welcome, <span className="user-name">
               {currentUser?.displayName || currentUser?.email}
-            </div>
+            </span>
           </div>
 
-          <div className="profile-pic">
+          <div className="user-dropdown-container">
             {currentUser && <UserDropdown />}
           </div>
         </div>
@@ -153,31 +165,45 @@ const HomePage = () => {
       </section>
 
       <section className="recent-documents-section">
-        <h2>Recent Documents</h2>
-        <div className="projects-grid">
-          {loading ? (
-            <div className="spinner-container">
-              <Spinner />
-            </div>
-          ) : filteredProjects.length === 0 ? (
-            <p>No projects found. Click "New Blank Document" to create a new project.</p>
-          ) : (
-            filteredProjects.map((project, index) => (
-              <div key={project.id} className="project-card" onClick={() => handleProjectClick(project)}>
-                <p>
-                  {project.sections?.Introduction?.content
-                    ? project.sections.Introduction.content.slice(0, 500)
-                    : "No content available"}
-                  ...
-                </p>
-                <div className="bottom-doc">
-                  <h2>{project.title || 'Untitled Project'}</h2>
-                  <p>Last edited: {new Date(project.lastEdited).toLocaleDateString()}</p>
-                </div>
-                <div className="x-button" onClick={(e) => { e.stopPropagation(); handleDeleteClick(index); }}>X</div>
+        <div className="recent-documents-header">
+          <h2>Recent Documents</h2>
+        </div>
+        <div className="recent-documents-content">
+          <div className="projects-grid">
+            {loading ? (
+              <div className="spinner-container">
+                <Spinner />
               </div>
-            ))
-          )}
+            ) : filteredProjects.length === 0 ? (
+              <p>No projects found. Click "New Blank Document" to create a new project.</p>
+            ) : (
+              filteredProjects.map((project, index) => (
+                <div key={project.id} className="project-card" onClick={() => handleProjectClick(project)}>
+                  <p>
+                    {project.sections?.Introduction?.content
+                      ? project.sections.Introduction.content.slice(0, 500)
+                      : "No content available"}
+                    ...
+                  </p>
+                  <div className="bottom-doc">
+                    <div className="bottom-doc-content">
+                      <h2>{project.title || 'Untitled Project'}</h2>
+                      <p>Last edited: {new Date(project.lastEdited).toLocaleDateString()}</p>
+                    </div>
+                    <div className="ellipsis-button" onClick={(e) => handleEllipsisClick(e, index)}>
+                      ...
+                      {activeDropdown === index && (
+                        <div className="dropdown-menu">
+                          <button onClick={(e) => handleDeleteOption(e, index)}>Delete</button>
+                          {/* Add more options here as needed */}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </section>
 

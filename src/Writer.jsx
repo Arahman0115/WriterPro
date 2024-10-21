@@ -299,45 +299,21 @@ const Writer = () => {
       handleAddSection('Citations', citationsContent);
     }
   };
+  const handleSave = () => {
+    saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
 
+  };
   return (
     <div className="writer-container">
-      <div className="writer-main">
-        <div className="writer">
-          <div className='feedback-container'>
-            {feedbackMessage && <div className="feedback-message">{feedbackMessage}</div>}
-          </div>
-          <div className="title-section">
-            {isTitleEditing ? (
-              <input
-                type="text"
-                className="title-input"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                onBlur={handleTitleBlur}
-                onKeyDown={handleTitleKeyDown}
-                autoFocus
-              />
-            ) : (
-              <h2 className="project-title" onClick={() => setIsTitleEditing(true)}>
-                {title || 'Click to set title'}
-              </h2>
-            )}
-          </div>
-          <div className="writing-area-container">
-            <Editor
-              editorState={sections[activeSection].content}
-              onChange={handleChange}
-              handleKeyCommand={handleKeyCommand}
-              keyBindingFn={keyBindingFn}
-            />
-          </div>
-          <div className="character-count">
-            Character Count: {sections[activeSection].content.getCurrentContent().getPlainText('').length}
-          </div>
-        </div>
-      </div>
-      <div className='outlinenassistant'>
+      <Toolbar
+        onNewClick={() => navigate('/writer')}
+        onSaveClick={handleSave}
+        onDownloadClick={handleDownload}
+        onExportWordClick={handleExportAsMicrosoftWord}
+        onShowArticlesClick={toggleArticlesVisibility}
+        onCitationMangerClick={handleCitationManagerClick}
+      />
+      <div className='writer-main'>
         <div className="outline-box">
           <h2>Outline</h2>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -373,6 +349,43 @@ const Writer = () => {
             <button onClick={() => handleAddSection(newSection)}>Add</button>
           </div>
         </div>
+
+        <div className="writer">
+          <div className='feedback-container'>
+            {feedbackMessage && <div className="feedback-message">{feedbackMessage}</div>}
+          </div>
+          <div className="title-section">
+            {isTitleEditing ? (
+              <input
+                type="text"
+                className="title-input"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={handleTitleBlur}
+                onKeyDown={handleTitleKeyDown}
+                autoFocus
+              />
+            ) : (
+              <h2 className="project-title" onClick={() => setIsTitleEditing(true)}>
+                {title || 'Click to set title'}
+              </h2>
+            )}
+          </div>
+          <div className="writing-area-container">
+
+            <Editor
+              editorState={sections[activeSection].content}
+              onChange={handleChange}
+              handleKeyCommand={handleKeyCommand}
+              keyBindingFn={keyBindingFn}
+            />
+
+          </div>
+          <div className="character-count">
+            Character Count: {sections[activeSection].content.getCurrentContent().getPlainText('').length}
+          </div>
+        </div>
+
         <div className="suggestion-overlay">
           <h2 className='sugtitle'>WriterPro Assistant</h2>
           {!isEditing && suggestion && <span className="suggestion">{suggestion}</span>}
@@ -381,23 +394,7 @@ const Writer = () => {
           </div>
         </div>
       </div>
-      <Toolbar
-        onNewClick={() => navigate('/writer')}
-        onSaveClick={() => {
-          const contentToSave = Object.entries(sections).reduce((acc, [key, value]) => {
-            acc[key] = {
-              ...value,
-              content: value.content.getCurrentContent().getPlainText()
-            };
-            return acc;
-          }, {});
-          saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
-        }}
-        onDownloadClick={handleDownload}
-        onExportWordClick={handleExportAsMicrosoftWord}
-        onShowArticlesClick={toggleArticlesVisibility}
-        onCitationMangerClick={handleCitationManagerClick}
-      />
+
       <div className={`side-panel ${isArticlesVisible ? 'visible' : ''}`}>
         <h2>Research Articles</h2>
         {articles.length > 0 ? (
