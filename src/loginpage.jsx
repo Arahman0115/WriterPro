@@ -9,6 +9,7 @@ const LogInPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLogin, setIsLogin] = useState(true);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -21,6 +22,7 @@ const LogInPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // Clear any existing errors
         try {
             if (isLogin) {
                 await login(email, password);
@@ -30,6 +32,15 @@ const LogInPage = () => {
             navigate('/Homepage');
         } catch (error) {
             console.error(error);
+            if (error.code === 'auth/invalid-credential' ||
+                error.code === 'auth/user-not-found' ||
+                error.code === 'auth/wrong-password') {
+                setError('Incorrect email or password');
+            } else if (error.code === 'auth/email-already-in-use') {
+                setError('Email already in use');
+            } else {
+                setError('An error occurred. Please try again.');
+            }
         }
     };
 
@@ -39,6 +50,7 @@ const LogInPage = () => {
             navigate('/Homepage');
         } catch (error) {
             console.error(error);
+
         }
     };
 
@@ -46,6 +58,7 @@ const LogInPage = () => {
         <div className="login-container">
             <div className="login-box">
                 <h1 className="login-title">{isLogin ? 'Login' : 'Create An Account'}</h1>
+                {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSubmit} className="login-form">
                     <input
                         type="email"
@@ -81,11 +94,13 @@ const LogInPage = () => {
                         {isLogin ? 'Sign in' : 'Sign up'} with Google
                     </button>
 
-
                     <button
                         type="button"
                         className="toggle-button"
-                        onClick={() => setIsLogin(!isLogin)}
+                        onClick={() => {
+                            setIsLogin(!isLogin);
+                            setError(''); // Clear error when switching between login and signup
+                        }}
                     >
                         {isLogin ? 'Need an account? Sign up' : 'Already have an account? Log in'}
                     </button>

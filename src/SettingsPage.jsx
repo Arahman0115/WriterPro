@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext'; // Import the custom hook
 import './SettingsPage.css'; // Add your styles here
-import { storage } from './firebase'; // Import your Firebase storage setup
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import required functions from Firebase storage
-import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore functions
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import required functions from Firebase storage
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
+import { db } from './firebase'; // Make sure to import your Firestore instance
+import { getAuth, updateProfile } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, User, Bot, Upload } from 'lucide-react';
 
 const SettingsPage = () => {
-    const { currentUser, updateProfile } = useAuth(); // Make sure to include updateProfile from AuthContext
+    const { currentUser } = useAuth(); // Make sure to include updateProfile from AuthContext
     const [name, setName] = useState(currentUser?.displayName || '');
     const [profilePic, setProfilePic] = useState(null);
     const [tone, setTone] = useState('neutral');
@@ -21,51 +22,61 @@ const SettingsPage = () => {
         }
     }, [currentUser]);
 
-    const handleProfileUpdate = (e) => {
-        e.preventDefault();
-        const updates = {
-            displayName: name,
-        };
+    const uploadProfilePicture = async (file, userId) => {
+        const storage = getStorage();
+        const storageRef = ref(storage, `profilePictures/${userId}`);
 
-        // If there is a new profile picture, upload it
-        if (profilePic) {
-            const imageRef = ref(storage, `${currentUser.uid}/profilePictures`); // Reference to the location in Storage
-
+        try {
             // Upload the file
-            uploadBytes(imageRef, profilePic).then(() => {
-                // Get the download URL after uploading
-                getDownloadURL(imageRef).then((url) => {
-                    // Add the photo URL to updates
-                    updates.photoURL = url;
+            await uploadBytes(storageRef, file);
 
-                    // Update the user's profile in Firebase Authentication
-                    updateProfile(updates).then(() => {
-                        // Update the Firestore document with the new profile picture URL
-                        const userRef = doc(db, 'Users', currentUser.uid);
-                        updateDoc(userRef, { profilePicture: url, displayName: name }) // Update Firestore with both fields
-                            .then(() => {
-                                console.log("Profile updated successfully!");
-                            })
-                            .catch((error) => {
-                                console.error("Error updating profile in Firestore:", error);
-                            });
-                    }).catch((error) => {
-                        console.error("Error updating profile:", error);
-                    });
-                });
-            }).catch((error) => {
-                console.error("Error uploading file:", error);
+            // Get the download URL
+            const downloadURL = await getDownloadURL(storageRef);
+
+            // Save the URL to Firestore
+            const userDocRef = doc(db, 'users', userId);
+            await setDoc(userDocRef, {
+                profilePictureUrl: downloadURL
+            }, { merge: true });
+
+            console.log("Profile picture uploaded successfully");
+            return downloadURL;
+        } catch (error) {
+            console.error("Error uploading profile picture:", error);
+            throw error;
+        }
+    };
+
+    const handleProfileUpdate = async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+
+        try {
+            let photoURL = currentUser.photoURL;
+
+            if (profilePic) {
+                photoURL = await uploadProfilePicture(profilePic, currentUser.uid);
+            }
+
+            // Update the user's profile in Firebase Authentication
+            const auth = getAuth();
+            await updateProfile(auth.currentUser, {
+                displayName: name,
+                photoURL: photoURL
             });
-        } else {
-            // If there's no new profile picture, just update the displayName
-            const userRef = doc(db, 'Users', currentUser.uid);
-            updateDoc(userRef, { displayName: name }) // Update Firestore with the new display name
-                .then(() => {
-                    console.log("Display name updated successfully!");
-                })
-                .catch((error) => {
-                    console.error("Error updating display name in Firestore:", error);
-                });
+
+            // Update or create the Firestore document
+            const userRef = doc(db, 'users', currentUser.uid);
+            await setDoc(userRef, {
+                displayName: name,
+                profilePictureUrl: photoURL
+            }, { merge: true });
+
+            console.log("Profile updated successfully!");
+            // Optionally, show a success message to the user
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            // Optionally, show an error message to the user
         }
     };
 
@@ -79,6 +90,7 @@ const SettingsPage = () => {
     const handleBotSettingsUpdate = (e) => {
         e.preventDefault();
         console.log('Updated Bot Settings:', { tone, language, suggestions });
+        // Implement the logic to save bot settings
     };
     const handleSetHomeClick = () => {
         navigate('/Homepage');
