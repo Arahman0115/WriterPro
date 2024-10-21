@@ -30,8 +30,6 @@ const Toolbar = ({ onNewClick, onSaveClick, onDownloadClick, onExportWordClick, 
           File
           {activeDropdown === 'file' && (
             <div className="dropdown">
-              <button onClick={onNewClick}>New</button>
-              <button onClick={() => alert('Open clicked')}>Open</button>
               <button onClick={onSaveClick}>Save</button>
               <button onClick={onDownloadClick}>Export as Plain Text</button>
               <button onClick={onExportWordClick}>Export as Word Doc</button>

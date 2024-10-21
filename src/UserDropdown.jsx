@@ -2,12 +2,37 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import './UserDropdown.css';
 import { useNavigate } from 'react-router-dom';
+import { db } from './firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const UserDropdown = () => {
     const { currentUser, logout } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
+    const [profilePicUrl, setProfilePicUrl] = useState(null);
     const navigate = useNavigate();
     const dropdownRef = useRef(null); // Reference for the dropdown
+
+    useEffect(() => {
+        const fetchProfilePic = async () => {
+            if (currentUser) {
+                try {
+                    setProfilePicUrl(currentUser.photoURL);
+                    const userDocRef = doc(db, 'users', currentUser.uid);
+                    const userDoc = await getDoc(userDocRef);
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        if (userData.profilePictureUrl) {
+                            setProfilePicUrl(userData.profilePictureUrl);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching profile picture:", error);
+                }
+            }
+        };
+
+        fetchProfilePic();
+    }, [currentUser]);
 
     const toggleDropdown = () => {
         setIsOpen((prev) => !prev); // Toggle dropdown state
@@ -48,8 +73,8 @@ const UserDropdown = () => {
     return (
         <div className="user-dropdown" ref={dropdownRef}>
             <div className="user-profile" onClick={toggleDropdown}>
-                {currentUser?.photoURL ? (
-                    <img src={currentUser.photoURL} alt="Profile" className="profile-pic1" />
+                {profilePicUrl ? (
+                    <img src={profilePicUrl} alt="Profile" className="profile-pic1" />
                 ) : (
                     <div className="default-pic">👤</div> // Default icon if no picture is available
                 )}
