@@ -8,6 +8,7 @@ const LogInPage = () => {
     const { login, signup, googleLogin } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
     const [isLogin, setIsLogin] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -27,7 +28,11 @@ const LogInPage = () => {
             if (isLogin) {
                 await login(email, password);
             } else {
-                await signup(email, password);
+                if (!name.trim()) {
+                    setError('Please enter your name');
+                    return;
+                }
+                await signup(email, password, name);
             }
             navigate('/Homepage');
         } catch (error) {
@@ -39,7 +44,7 @@ const LogInPage = () => {
             } else if (error.code === 'auth/email-already-in-use') {
                 setError('Email already in use');
             } else {
-                setError('')
+                setError('An error occurred. Please try again.');
             }
         }
     };
@@ -60,6 +65,15 @@ const LogInPage = () => {
                 <h1 className="login-title">{isLogin ? 'Login' : 'Create An Account'}</h1>
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSubmit} className="login-form">
+                    {!isLogin && (
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Name"
+                            className="login-input"
+                        />
+                    )}
                     <input
                         type="email"
                         value={email}

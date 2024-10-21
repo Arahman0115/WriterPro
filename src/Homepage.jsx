@@ -7,6 +7,8 @@ import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'
 import { useAuth } from './AuthContext'; // Import the useAuth hook
 import Spinner from './Spinner';
 import UserDropdown from './UserDropdown';
+import writerlogo from './writerlogo.webp';
+import wbg from './wbg.png';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -121,7 +123,7 @@ const HomePage = () => {
     <div className="homepage-container">
       <header className="navbar">
         <div className='titlelogo'>
-          <img src={homeIcon} alt="Home" className="home-icon1" />
+          <img src={wbg} alt="Home" className="home-icon1" />
           <h1 className='writerprotitle'>WriterPro</h1>
         </div>
 
@@ -138,7 +140,7 @@ const HomePage = () => {
         <div className="navbar-right">
           <div className='usernamebox'>
             <span>Welcome, </span>
-            <span className="user-name">{currentUser?.displayName || currentUser?.email}</span>
+            <span className="user-name">{currentUser?.displayName || currentUser?.displayName || currentUser?.email}</span>
             <div className="profile-pic">
               {/* Profile picture or initials */}
             </div>

@@ -11,6 +11,18 @@ body {
   /* Light background color */
 }
 
+#root>div,
+body>div {
+  border-radius: 0 !important;
+  overflow: hidden;
+  /* This will prevent any child elements from overflowing */
+}
+
+/* For non-React apps */
+  {
+  border-radius: 0 !important;
+}
+
 /* Main app container */
 .app {
 
@@ -25,7 +37,7 @@ body {
   /* Center content horizontally */
   padding: 20px;
   /* Add padding inside the container */
-  border-radius: 5px;
+
   /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   /* Subtle shadow for depth */
@@ -49,6 +61,7 @@ h1 {
 
 .vsc-initialized {
   background-color: #080808;
+
 }
 
 /* Responsive adjustments */

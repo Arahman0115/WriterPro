@@ -6,6 +6,7 @@
     padding: 40px;
     font-family: 'Segoe UI', 'Arial', sans-serif;
     box-sizing: border-box;
+
 }
 
 /* Styles for headings in the settings page */
@@ -14,13 +15,17 @@
     text-align: left;
     font-size: 2.5em;
     font-weight: 300;
-    margin-bottom: 40px;
+    margin-bottom: 1vh;
 }
 
 /* Styles for content in the settings page */
 .settings-content {
     max-width: 600px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 /* Styles for sections in the settings page */
@@ -29,7 +34,8 @@
     border: 1px solid #333;
     border-radius: 8px;
     padding: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+
 }
 
 /* Styles for headings in sections */
@@ -94,6 +100,11 @@
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.file-input-label:hover {
+    background-color: #1565c0;
 }
 
 /* Styles for SVG icons in file input labels */
@@ -143,4 +154,37 @@
 .settings-home-button:hover {
     background-color: #1882fc;
 
+}
+
+.profile-pic-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-pic-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.file-name {
+    margin-left: 10px;
+    color: #b3b3b3;
+}
+
+.update-message {
+    background-color: #1882fc;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
 }

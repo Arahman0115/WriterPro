@@ -13,6 +13,7 @@ import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveContent } from './contentManager';
 import { Editor, EditorState, ContentState, Modifier, CompositeDecorator, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import wbg from './wbg.png';
 
 const formatCitation = (article) => {
   // Basic MLA format: Author(s). "Title of Source." Title of Container, Other contributors, Version, Number, Publisher, Publication Date, Location.

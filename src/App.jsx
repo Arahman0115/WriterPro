@@ -1,6 +1,7 @@
 // App.js
 import React from 'react';
-import './App.css';
+
+import './global.css'
 import WriterPage from './Writer';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';

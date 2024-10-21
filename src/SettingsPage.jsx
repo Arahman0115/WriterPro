@@ -12,13 +12,17 @@ const SettingsPage = () => {
     const { currentUser } = useAuth(); // Make sure to include updateProfile from AuthContext
     const [name, setName] = useState(currentUser?.displayName || '');
     const [profilePic, setProfilePic] = useState(null);
+    const [profilePicPreview, setProfilePicPreview] = useState(currentUser?.photoURL || '');
     const [tone, setTone] = useState('neutral');
     const [language, setLanguage] = useState('English');
     const [suggestions, setSuggestions] = useState(true);
+    const [updateMessage, setUpdateMessage] = useState('');
     const navigate = useNavigate();
+
     useEffect(() => {
         if (currentUser) {
             setName(currentUser.displayName || '');
+            setProfilePicPreview(currentUser.photoURL || '');
         }
     }, [currentUser]);
 
@@ -72,18 +76,25 @@ const SettingsPage = () => {
                 profilePictureUrl: photoURL
             }, { merge: true });
 
-            console.log("Profile updated successfully!");
-            // Optionally, show a success message to the user
+            setProfilePicPreview(photoURL);
+            setUpdateMessage("Profile updated successfully!");
+            setTimeout(() => setUpdateMessage(''), 3000); // Clear message after 3 seconds
         } catch (error) {
             console.error("Error updating profile:", error);
-            // Optionally, show an error message to the user
+            setUpdateMessage("Error updating profile. Please try again.");
+            setTimeout(() => setUpdateMessage(''), 3000);
         }
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setProfilePic(file); // Set the file to the state
+            setProfilePic(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProfilePicPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -106,6 +117,7 @@ const SettingsPage = () => {
             <div className="settings-content">
                 <div className="settings-section">
                     <h2><User size={20} /> User Profile</h2>
+                    {updateMessage && <p className="update-message">{updateMessage}</p>}
                     <form onSubmit={handleProfileUpdate}>
                         <div className="form-group">
                             <label htmlFor="name">Name</label>
@@ -118,16 +130,26 @@ const SettingsPage = () => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="profile-pic">Profile Picture</label>
-                            <div className="file-input-wrapper">
-                                <input
-                                    type="file"
-                                    id="profile-pic"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                />
-                                <label htmlFor="profile-pic" className="file-input-label">
-                                    <Upload size={20} /> Choose File
-                                </label>
+                            <div className="profile-pic-container">
+                                {profilePicPreview && (
+                                    <img
+                                        src={profilePicPreview}
+                                        alt="Profile Preview"
+                                        className="profile-pic-preview"
+                                    />
+                                )}
+                                <div className="file-input-wrapper">
+                                    <input
+                                        type="file"
+                                        id="profile-pic"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                    />
+                                    <label htmlFor="profile-pic" className="file-input-label">
+                                        <Upload size={20} /> Choose File
+                                    </label>
+                                    {profilePic && <span className="file-name">{profilePic.name}</span>}
+                                </div>
                             </div>
                         </div>
                         <button type="submit" className="update-button">Update Profile</button>

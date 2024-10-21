@@ -2,12 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
 import homeIcon from './home-icon.jpg';
+import quill from './quilio.png';
+import wbg from './wbg.png';
 
 const LandingPage = () => {
     return (
         <div className="landing-container">
             <nav className="landing-nav">
-                <img src={homeIcon} alt="Home" className="home-icon1" />
+                <img src={wbg} alt="Home" className="home-icon12" />
                 <div className="nav-links">
                     <Link to="/login">Log In</Link>
                     <Link to="/login" state={{ isSignup: true }} className="signup-btn">Sign Up</Link>

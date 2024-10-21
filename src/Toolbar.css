@@ -90,8 +90,8 @@
 
 /* Icon next to menu items */
 .home-icon {
-    width: 44px;
-    height: 44px;
+    width: 80px;
+    height: 80px;
     margin-right: 8px;
     cursor: pointer;
     display: inline-block;
@@ -99,13 +99,15 @@
     fill: #5f6368;
     transition: fill 0.2s ease;
     border-radius: 10px;
-    border: 2px solid var(--secondary-purple);
+    transition: transform 0.3s ease;
+    margin-top: 10px;
+
 }
 
 /* Hover effect for home-icon */
 .home-icon:hover {
     fill: #5f6368;
-    scale: 1.1;
+    transform: scale(1.1);
 
     /* No background color change */
 }

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
 import { auth, googleProvider } from './firebase'; // Import Google provider
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import required functions from Firebase storage
 
@@ -25,8 +25,10 @@ export const AuthProvider = ({ children }) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
 
-    const signup = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password);
+    const signup = async (email, password, name) => {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: name });
+        return userCredential;
     };
 
     const logout = () => {
