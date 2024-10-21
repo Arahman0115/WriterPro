@@ -52,14 +52,10 @@ body {
 }
 
 .writerprotitle {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    font-weight: bold;
-    color: #1882fc;
-    margin-left: 1rem;
-    font-family: 'Courier New', Courier, monospace;
-    text-shadow: 1px 1px 0 rgba(6, 12, 193, 0.5),
-        2px 2px 0 rgba(33, 47, 155, 0.4),
-        3px 3px 0 rgba(0, 1, 45, 0.3);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+    text-shadow: 0 4px 15px rgba(24, 130, 252, 0.6);
 }
 
 .navbar-right {
