@@ -39,7 +39,7 @@ const LogInPage = () => {
             } else if (error.code === 'auth/email-already-in-use') {
                 setError('Email already in use');
             } else {
-                setError('An error occurred. Please try again.');
+                setError('')
             }
         }
     };
