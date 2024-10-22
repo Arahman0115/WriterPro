@@ -144,19 +144,20 @@
 .suggestion-overlay {
     flex: 0 0 20%;
     height: auto;
-    max-height: calc(100vh - var(--toolbar-height) - 2rem);
+    max-height: calc(100vh - var(--toolbar-height) - 3rem);
     position: sticky;
     top: calc(var(--toolbar-height) + 1rem);
     right: 0;
-    overflow-y: auto;
-    margin-bottom: 0;
+    overflow-y: none;
+
     margin-left: 0;
     border: 2px solid #1882fc;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(5px);
     box-shadow: 0 4px 6px rgba(24, 130, 252, 0.1);
+    position: relative;
 }
 
 .sugtitle {
@@ -252,7 +253,7 @@
     flex: 0 0 20%;
     /* Adjust width as needed */
     height: auto;
-    max-height: calc(100vh - var(--toolbar-height) - 2rem);
+    max-height: calc(100vh - var(--toolbar-height) - 3rem);
     margin-bottom: 0;
     margin-right: 0;
     position: sticky;
@@ -385,7 +386,7 @@
 }
 
 .new-section button:hover {
-    background-color: #2639b6;
+    background-color: #10427b;
 }
 
 .outline-box::-webkit-scrollbar {
@@ -441,25 +442,32 @@
 
 .side-panel {
     position: fixed;
-    top: calc(1vh + var(--toolbar-height));
-    /* Position it just below the toolbar */
-    right: -250px;
-    /* Hide it off-screen initially */
-    width: 250px;
-    height: calc(98vh - var(--toolbar-height));
+    top: calc(1.5vh + var(--toolbar-height));
+    right: 0;
+    /* Keep it aligned to the right */
+    flex: 0 0 20%;
+    width: 450px;
+    /* Set a fixed width */
+    height: calc(100vh - var(--toolbar-height) - 2rem);
     background-color: #000000;
     border: 2px solid #1882fc;
-    transition: right 0.3s ease;
+
+    /* Change transition property to transform */
     overflow-y: auto;
     z-index: 999;
-    /* Set this to be just below the toolbar */
     padding: 20px;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    transform: translateX(100%);
+    transition: transform 0.6s ease;
+    /* Hide it off-screen initially */
 }
 
 .side-panel.visible {
-    right: 0;
+    transform: translateX(0);
+
+
+    /* Show it when the 'visible' class is added */
 }
 
 /* Title styling */
@@ -603,4 +611,190 @@
         max-height: 30vh;
         position: static;
     }
+}
+
+.rotate-device-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000000;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .writer-container {
+        pointer-events: none;
+    }
+
+    .DraftEditor-root {
+        pointer-events: none;
+    }
+
+    .outline-box,
+    .suggestion-overlay,
+    .side-panel {
+        display: none;
+    }
+
+    .writer-main {
+        overflow-y: auto;
+        max-height: calc(100vh - var(--toolbar-height));
+    }
+
+    .toolbar {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .rotate-device-message {
+        display: none;
+    }
+}
+
+@media only screen and (max-device-width: 480px) and (max-device-width: 640px) {
+    .writer-container {
+        padding: 0.5rem;
+    }
+
+    .writer-main {
+        flex-direction: row;
+        gap: 0.5rem;
+        height: calc(100vh - 1rem);
+    }
+
+    .outline-box {
+        flex: 0 0 30%;
+        font-size: 0.8rem;
+        max-height: 100%;
+        overflow-y: auto;
+    }
+
+    .outline-box h2 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .outline-box ul {
+        padding-left: 0.5rem;
+    }
+
+    .outline-box li {
+        margin-bottom: 0.3rem;
+        font-size: 0.7rem;
+    }
+
+    .writer {
+        flex: 0 0 70%;
+        margin-top: 0;
+    }
+
+    .title-input,
+    .project-title {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+        padding: 0.3rem;
+    }
+
+    .writing-area-container {
+        height: calc(100% - 2rem);
+        padding: 0.3rem;
+    }
+
+    .DraftEditor-root {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+
+    .character-count {
+        font-size: 0.7rem;
+    }
+
+    .suggestion-overlay,
+    .toolbar,
+    .side-panel,
+    .new-section {
+        display: none;
+    }
+
+    body {
+        /* Add any specific body styles for phone screens */
+        font-size: 14px;
+    }
+}
+
+/* Ensure larger screens maintain normal layout */
+
+.history-button {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    background-color: #1882fc;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    transition: background-color 0.3s ease;
+}
+
+.history-button:hover {
+    background-color: #10427b;
+}
+
+.suggestion-history {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: calc(80vh - var(--toolbar-height) - 3rem);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+}
+
+.history-item {
+    background-color: rgba(2, 45, 62, 0.1);
+    border: 1px solid rgba(24, 130, 252, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #ffffff;
+}
+
+.history-item:last-child {
+    margin-bottom: 0;
+}
+
+.insert-suggestion-button {
+    background-color: #1882fc;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    transition: background-color 0.3s ease;
+}
+
+.insert-suggestion-button:hover {
+    background-color: #1565c0;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* ... existing styles ... */
 }

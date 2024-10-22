@@ -61,6 +61,8 @@ const Writer = () => {
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [isArticlesVisible, setIsArticlesVisible] = useState(false);
   const [articles, setArticles] = useState([]);
+  const [previousSuggestions, setPreviousSuggestions] = useState([]);
+  const [showSuggestionHistory, setShowSuggestionHistory] = useState(false);
 
   const navigate = useNavigate();
   const [sections, setSections] = useState({
@@ -230,6 +232,7 @@ const Writer = () => {
       const data = await response.json();
       if (data.message) {
         setSuggestion(data.message);
+        setPreviousSuggestions(prevSuggestions => [data.message, ...prevSuggestions.slice(0, 9)]);
       } else {
         setSuggestion('');
         console.error('Error or missing message in response:', data);
@@ -348,6 +351,32 @@ const Writer = () => {
     saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
 
   };
+
+  const toggleSuggestionHistory = () => {
+    setShowSuggestionHistory(!showSuggestionHistory);
+  };
+
+  const handleSuggestionClick = (suggestionText) => {
+    const currentContent = sections[activeSection].content.getCurrentContent();
+    const selection = sections[activeSection].content.getSelection();
+
+    const newContent = Modifier.insertText(
+      currentContent,
+      selection,
+      suggestionText
+    );
+
+    const newEditorState = EditorState.push(
+      sections[activeSection].content,
+      newContent,
+      'insert-characters'
+    );
+
+    handleChange(newEditorState);
+    setSuggestion('');
+    setShowSuggestionHistory(false);
+  };
+
   return (
     <div className="writer-container">
       <Toolbar
@@ -434,8 +463,30 @@ const Writer = () => {
         </div>
 
         <div className="suggestion-overlay">
-          <h2 className='sugtitle'>WriterPro Assistant</h2>
-          {!isEditing && suggestion && <span className="suggestion">{suggestion}</span>}
+          <div className='sugtitle'>{showSuggestionHistory ? 'History' : 'WriterPro Assistant'}</div>
+          <button className="history-button" onClick={toggleSuggestionHistory}>
+            {showSuggestionHistory ? 'Current' : 'History'}
+          </button>
+          {!isEditing && !showSuggestionHistory && suggestion && (
+            <span className="suggestion">{suggestion}</span>
+          )}
+          {!isEditing && showSuggestionHistory && (
+            <div className="suggestion-history">
+              <ul>
+                {previousSuggestions.map((prevSuggestion, index) => (
+                  <li key={index} className="history-item">
+                    {prevSuggestion}
+                    <button
+                      className="insert-suggestion-button"
+                      onClick={() => handleSuggestionClick(prevSuggestion)}
+                    >
+                      Insert
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <div className='spinnerbox'>
             {isEditing && <Spinner />}
           </div>
