@@ -5,7 +5,7 @@ import Toolbar from './Toolbar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { db, auth } from './firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { debounce } from 'lodash';
 import Spinner from './Spinner';
 import { saveAs } from 'file-saver';
@@ -349,13 +349,73 @@ const Writer = () => {
       setTimeout(() => setFeedbackMessage(''), 3000);
     }
   };
-  const handleSave = () => {
-    saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
+  const handleSave = useCallback((editorState) => {
+    setIsEditing(true);
 
-  };
+    // Clear any existing timeouts
+    if (suggestionTimeoutRef.current) {
+      clearTimeout(suggestionTimeoutRef.current);
+    }
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    // Update the sections state
+    setSections(prevSections => ({
+      ...prevSections,
+      [activeSection]: { ...prevSections[activeSection], content: editorState },
+    }));
+
+    // Debounce the save operation
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        const contentToSave = Object.entries(sections).reduce((acc, [key, value]) => {
+          acc[key] = {
+            ...value,
+            content: value.content.getCurrentContent().getPlainText()
+          };
+          return acc;
+        }, {});
+
+        setFeedbackMessage('Saving...');
+
+        await saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
+
+        setFeedbackMessage('Saved');
+        setTimeout(() => setFeedbackMessage(''), 3000);
+      } catch (error) {
+        console.error('Error saving content:', error);
+        setFeedbackMessage('Error saving');
+        setTimeout(() => setFeedbackMessage(''), 3000);
+      } finally {
+        setIsEditing(false);
+      }
+    }, 2000); // Reduced debounce time to 2 seconds
+  }, [user, location.state?.project, sections, sectionOrder, title, articles, activeSection]);
 
   const toggleSuggestionHistory = () => {
     setShowSuggestionHistory(!showSuggestionHistory);
+  };
+  const handleDeleteArticle = async (articleId) => {
+    if (!user || !location.state?.project) {
+      console.error("User or project not available");
+      return;
+    }
+
+    try {
+      const projectId = location.state.project.id;
+      const articleRef = doc(db, `users/${user.uid}/projects/${projectId}/researcharticles`, articleId);
+      await deleteDoc(articleRef);
+
+      // Update local state
+      setArticles(prevArticles => prevArticles.filter(article => article.id !== articleId));
+      setFeedbackMessage('Article deleted successfully');
+      setTimeout(() => setFeedbackMessage(''), 3000);
+    } catch (error) {
+      console.error("Error deleting article: ", error);
+      setFeedbackMessage('Error deleting article');
+      setTimeout(() => setFeedbackMessage(''), 3000);
+    }
   };
 
   const handleSuggestionClick = (suggestionText) => {
@@ -519,7 +579,7 @@ const Writer = () => {
       <div className={`side-panel ${isArticlesVisible ? 'visible' : ''}`}>
         <h2>Research Articles</h2>
         {articles.length > 0 ? (
-          <ul>
+          <ul className='article-list'>
             {articles.map((article) => (
               <div key={article.id} className='articlebox'>
                 <li>
@@ -532,6 +592,7 @@ const Writer = () => {
                   <a href={article.author} target="_blank" rel="noopener noreferrer">
                     {article.author}
                   </a>
+                  <button className="article-delete-button" onClick={() => handleDeleteArticle(article.id)}>Delete</button>
                 </li>
               </div>
             ))}

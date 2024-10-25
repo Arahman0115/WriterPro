@@ -64,7 +64,9 @@ const HomePage = () => {
   const handleGeneralSearchClick = () => {
     navigate('/general-search');
   };
-
+  const handleFigureExplanationClick = () => {
+    navigate('/figure-explanation');
+  };
   const handleDeleteClick = (index) => {
     setDeleteIndex(index);
     setIsModalOpen(true);
@@ -122,6 +124,10 @@ const HomePage = () => {
     {
       name: "Semantic Search",
       onClick: handleSemanticSearchClick,
+    },
+    {
+      name: "Figure Explanation",
+      onClick: handleFigureExplanationClick
     },
 
 

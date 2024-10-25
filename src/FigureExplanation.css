@@ -1,0 +1,107 @@
+.figure-explanation-container {
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #000000;
+    color: #e0e0e0;
+    font-family: Arial, sans-serif;
+    overflow-y: auto;
+
+}
+
+.figure-explanation-container h1 {
+    color: #0066cc;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.image-upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+
+}
+
+#image-upload {
+    display: none;
+}
+
+.upload-button {
+    background-color: #0066cc;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: #004a99;
+}
+
+.image-preview {
+    margin-top: 20px;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 2px solid #0066cc;
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.explain-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.explain-button:hover {
+    background-color: #004a99;
+}
+
+.explain-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+.explanation-box {
+    margin-top: 20px;
+    background-color: #1e1e1e;
+    border: 1px solid #0066cc;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.explanation-box h2 {
+    color: #0066cc;
+    margin-bottom: 10px;
+}
+
+.explanation-box p {
+    line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+    .figure-explanation-container {
+        padding: 10px;
+    }
+
+    .upload-button,
+    .explain-button {
+        width: 100%;
+    }
+}
