@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './HomePage.css';
-import homeIcon from './home-icon.jpg';
+
 import { auth, db } from './firebase'; // Adjust the path based on your project structure
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { useAuth } from './AuthContext'; // Import the useAuth hook
@@ -9,6 +9,9 @@ import Spinner from './Spinner';
 import UserDropdown from './UserDropdown';
 import writerlogo from './writerlogo.webp';
 import wbg from './wbg.png';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+
+
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -55,11 +58,9 @@ const HomePage = () => {
     console.log("New Project button clicked");
 
     // Navigate to writer without creating a new document in Firestore
-    navigate('/writer', { state: { project: { title: '', sections: { Introduction: { content: '' } } } } });
+    navigate('/writer', { state: { project: { title: '', sections: { Template: { content: '' } } } } });
   };
-  const handleResearchCrossClick = () => {
-    navigate('/research-cross');
-  };
+
   const handleGeneralSearchClick = () => {
     navigate('/general-search');
   };
@@ -67,6 +68,9 @@ const HomePage = () => {
   const handleDeleteClick = (index) => {
     setDeleteIndex(index);
     setIsModalOpen(true);
+  };
+  const handleSemanticSearchClick = () => {
+    navigate('/semantic-search');
   };
 
   const handleConfirmDelete = async () => {
@@ -115,6 +119,11 @@ const HomePage = () => {
       name: "General Search",
       onClick: handleGeneralSearchClick,
     },
+    {
+      name: "Semantic Search",
+      onClick: handleSemanticSearchClick,
+    },
+
 
     // Add more templates as needed
   ];
@@ -128,6 +137,7 @@ const HomePage = () => {
         </div>
 
         <div className="navbar-middle">
+
           <input
             type="text"
             className="search-bar"
@@ -135,18 +145,15 @@ const HomePage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+
         </div>
 
         <div className="navbar-right">
-          <div className='usernamebox'>
-            <span>Welcome, </span>
-            <span className="user-name">{currentUser?.displayName || currentUser?.displayName || currentUser?.email}</span>
-            <div className="profile-pic">
-              {/* Profile picture or initials */}
-            </div>
+          <div className="usernamebox">
+            <span className="user-name"><span>Welcome, </span>{currentUser?.displayName || currentUser?.email}</span>
           </div>
-          <div className="user-dropdown-container">
-            {currentUser && <UserDropdown />}
+          <div className="user-dropdown-container" style={{ position: 'relative' }}> {/* Add this wrapper */}
+            <UserDropdown />
           </div>
         </div>
       </header>
@@ -183,8 +190,8 @@ const HomePage = () => {
               filteredProjects.map((project, index) => (
                 <div key={project.id} className="project-card" onClick={() => handleProjectClick(project)}>
                   <p>
-                    {project.sections?.Introduction?.content
-                      ? project.sections.Introduction.content.slice(0, 500)
+                    {project.sections?.Template?.content
+                      ? project.sections.Template.content.slice(0, 500)
                       : "No content available"}
                     ...
                   </p>
@@ -193,14 +200,14 @@ const HomePage = () => {
                       <h2>{project.title || 'Untitled Project'}</h2>
                       <p>Last edited: {new Date(project.lastEdited).toLocaleDateString()}</p>
                     </div>
-                    <div className="ellipsis-button" onClick={(e) => handleEllipsisClick(e, index)}>
-                      ...
-                      {activeDropdown === index && (
-                        <div className="dropdown-menu">
-                          <button onClick={(e) => handleDeleteOption(e, index)}>Delete</button>
-                          {/* Add more options here as needed */}
-                        </div>
-                      )}
+                    <div className="dropdown-container">
+                      <button className="ellipsis-button" onClick={(e) => handleEllipsisClick(e, index)}>
+                        <MoreVertIcon />
+                      </button>
+                      <div className="dropdown-menu">
+                        <button onClick={(e) => handleDeleteOption(e, index)}>Delete</button>
+                        {/* Add more options here as needed */}
+                      </div>
                     </div>
                   </div>
                 </div>

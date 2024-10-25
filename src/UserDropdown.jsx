@@ -34,7 +34,8 @@ const UserDropdown = () => {
         fetchProfilePic();
     }, [currentUser]);
 
-    const toggleDropdown = () => {
+    const toggleDropdown = (e) => {
+        e.stopPropagation(); // Add this line
         setIsOpen((prev) => !prev); // Toggle dropdown state
     };
 
@@ -70,29 +71,31 @@ const UserDropdown = () => {
         };
     }, [dropdownRef]);
 
+    console.log("UserDropdown rendered, isOpen:", isOpen);
+
     return (
         <div className="user-dropdown" ref={dropdownRef}>
             <div className="user-profile" onClick={toggleDropdown}>
                 {profilePicUrl ? (
-                    <img src={profilePicUrl} alt="Profile" className="profile-pic1" />
+                    <img src={profilePicUrl} alt="Profile" className="profile-pic" />
                 ) : (
-                    <div className="default-pic">👤</div> // Default icon if no picture is available
+                    <div className="profile-pic-placeholder">
+                        {currentUser?.displayName?.[0] || currentUser?.email?.[0] || '?'}
+                    </div>
                 )}
             </div>
-            {isOpen && (
-                <div className="dropdown-menu">
-                    <p>{currentUser?.displayName || currentUser?.email}</p> {/* Show display name or email */}
-                    <button onClick={handleLogout} className="dropdown-button">
-                        🚪 Sign out
-                    </button>
-                    <button onClick={goToSettings} className="dropdown-button">
-                        ⚙️ Settings
-                    </button>
-                    <button onClick={goToDocs} className="dropdown-button">
-                        📄 Docs
-                    </button>
-                </div>
-            )}
+            <div className={`dropdown-menu ${isOpen ? 'open' : ''}`}>
+                <p className="user-info">{currentUser?.displayName || currentUser?.email}</p>
+                <button onClick={handleLogout} className="dropdown-button">
+                    🚪 Sign out
+                </button>
+                <button onClick={goToSettings} className="dropdown-button">
+                    ⚙️ Settings
+                </button>
+                <button onClick={goToDocs} className="dropdown-button">
+                    📄 Docs
+                </button>
+            </div>
         </div>
     );
 };

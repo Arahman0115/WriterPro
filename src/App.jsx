@@ -15,6 +15,7 @@ import Research from './Research';
 import ResearchCross from './ResearchCross';
 import { AnimatePresence, motion } from 'framer-motion';
 import GeneralSearch from './GeneralSearch';
+import SemanticSearch from './SemanticSearch';
 
 const pageVariants = {
   initial: {
@@ -64,6 +65,7 @@ const App = () => {
           <Route path="/research" element={<AnimatedRoute><Research /></AnimatedRoute>} />
           <Route path="/general-search" element={<AnimatedRoute><GeneralSearch /></AnimatedRoute>} />
           <Route path="/research-cross" element={<AnimatedRoute><ResearchCross /></AnimatedRoute>} />
+          <Route path="/semantic-search" element={<AnimatedRoute><SemanticSearch /></AnimatedRoute>} />
           <Route path="/demo" element={<AnimatedRoute><DemoPage /></AnimatedRoute>} />
           <Route path="/Homepage" element={
             <AnimatedRoute>

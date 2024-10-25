@@ -13,7 +13,7 @@ import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveContent } from './contentManager';
 import { Editor, EditorState, ContentState, Modifier, CompositeDecorator, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import wbg from './wbg.png';
+
 
 const formatCitation = (article) => {
   // Basic MLA format: Author(s). "Title of Source." Title of Container, Other contributors, Version, Number, Publisher, Publication Date, Location.
@@ -57,7 +57,7 @@ const Writer = () => {
   const [suggestion, setSuggestion] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
-  const [activeSection, setActiveSection] = useState('Introduction');
+  const [activeSection, setActiveSection] = useState('Template');
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [isArticlesVisible, setIsArticlesVisible] = useState(false);
   const [articles, setArticles] = useState([]);
@@ -66,7 +66,7 @@ const Writer = () => {
 
   const navigate = useNavigate();
   const [sections, setSections] = useState({
-    Introduction: { id: 'section-1', content: EditorState.createEmpty() },
+    Template: { id: 'section-1', content: EditorState.createEmpty() },
     Body: { id: 'section-2', content: EditorState.createEmpty() },
     Conclusion: { id: 'section-3', content: EditorState.createEmpty() }
   });
@@ -135,12 +135,12 @@ const Writer = () => {
           return acc;
         }, {}));
         setSectionOrder(sectionOrder || Object.keys(sections));
-        setActiveSection(sectionOrder?.[0] || 'Introduction');  // Set a default active section
+        setActiveSection(sectionOrder?.[0] || 'Template');  // Set a default active section
         setIsTitleSet(!!title);
         setArticles(articles || []);
       } else {
-        setSectionOrder(['Introduction', 'Body', 'Conclusion']);
-        setActiveSection('Introduction');  // Set a default active section
+        setSectionOrder(['Template', 'Body', 'Conclusion']);
+        setActiveSection('Template');  // Set a default active section
       }
     };
 
@@ -268,7 +268,9 @@ const Writer = () => {
 
   const handleTitleBlur = () => {
     setIsTitleEditing(false);
-    setIsTitleSet(!!title);
+    if (title.trim() !== '') {
+      setIsTitleSet(true);
+    }
   };
 
   const handleTitleKeyDown = (e) => {
@@ -377,6 +379,23 @@ const Writer = () => {
     setShowSuggestionHistory(false);
   };
 
+  useEffect(() => {
+    return () => {
+      // Clear all timeouts
+      if (suggestionTimeoutRef.current) clearTimeout(suggestionTimeoutRef.current);
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+
+      // Cancel any pending save operations
+      saveContent.cancel();
+
+      // Clear the state
+      setSections({});
+      setTitle('');
+      setSectionOrder([]);
+      // ... clear other relevant state
+    };
+  }, []);
+
   return (
     <div className="writer-container">
       <Toolbar
@@ -438,14 +457,18 @@ const Writer = () => {
                 onBlur={handleTitleBlur}
                 onKeyDown={handleTitleKeyDown}
                 autoFocus
+                placeholder="Enter a title to start writing"
               />
             ) : (
-              <h2 className="project-title" onClick={() => setIsTitleEditing(true)}>
-                {title || 'Click to set title'}
+              <h2
+                className={`project-title ${!isTitleSet ? 'untitled' : ''}`}
+                onClick={() => setIsTitleEditing(true)}
+              >
+                {isTitleSet ? title : 'Click to set title'}
               </h2>
             )}
           </div>
-          <div className="writing-area-container">
+          <div className={`writing-area-container ${!isTitleSet ? 'disabled' : ''}`}>
             {sections[activeSection] ? (
               <Editor
                 editorState={sections[activeSection].content}

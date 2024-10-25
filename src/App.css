@@ -41,7 +41,7 @@ body>div {
   /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   /* Subtle shadow for depth */
-  background-color: #0e0c0c;
+  background-color: #080808;
   /* White background for the app */
   margin: 0;
   padding: 0;
@@ -60,7 +60,7 @@ h1 {
 }
 
 .vsc-initialized {
-  background-color: #080808;
+  background-color: #ae0a0a;
 
 }
 
