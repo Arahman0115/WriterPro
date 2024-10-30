@@ -2,35 +2,67 @@ import { collection, addDoc, setDoc, getDocs, doc } from 'firebase/firestore';
 import { debounce } from 'lodash';
 import { db, auth } from './firebase';
 
-// Function to save content to Firestore
+// Add a new function to create a blank document
+export const createBlankDocument = async (user) => {
+  if (!user) return null;
+  
+  const blankProject = {
+    title: '',
+    sections: {
+      Template: { content: '' },
+      Body: { content: '' },
+      Conclusion: { content: '' }
+    },
+    sectionOrder: ['Template', 'Body', 'Conclusion'],
+    lastEdited: Date.now(),
+    articles: []
+  };
+
+  try {
+    const newDocRef = await addDoc(collection(db, `users/${user.uid}/projects`), blankProject);
+    return {
+      id: newDocRef.id,
+      ...blankProject
+    };
+  } catch (error) {
+    console.error("Error creating blank document:", error);
+    throw error;
+  }
+};
+
+// Modified saveContent function
 export const saveContent = debounce(async (user, project, updatedSections, sectionOrder, title, articles) => {
+    if (!user) {
+        console.log('User is not authenticated');
+        return null;
+    }
+
     const currentProject = {
         title,
         sections: updatedSections,
-        sectionOrder, // Include the current sectionOrder
+        sectionOrder,
         lastEdited: Date.now(),
         articles
     };
 
-    if (user) {
-        try {
-            // If a project ID exists, update the existing document
-            if (project?.id) {
-                const docRef = doc(db, `users/${user.uid}/projects`, project.id);
-                await setDoc(docRef, currentProject, { merge: true });
-            } else {
-                // If no project ID, create a new document
-                const newDocRef = await addDoc(collection(db, `users/${user.uid}/projects`), currentProject);
-                return newDocRef.id; // Return new project ID
-            }
-        } catch (e) {
-            console.error("Error saving document: ", e);
+    try {
+        const projectId = project?.id;
+        
+        // If no project ID exists, throw an error - new documents should be created using createBlankDocument
+        if (!projectId) {
+            throw new Error('No project ID provided. New documents should be created using createBlankDocument');
         }
-    } else {
-        console.log('User is not authenticated');
+
+        // Update existing document
+        const docRef = doc(db, `users/${user.uid}/projects`, projectId);
+        await setDoc(docRef, currentProject, { merge: true });
+
+        return {
+            id: projectId,
+            isNew: false
+        };
+    } catch (e) {
+        console.error("Error saving document: ", e);
+        throw e;
     }
 }, 4000);
-
-// Function to load a project from Firestore
-
-

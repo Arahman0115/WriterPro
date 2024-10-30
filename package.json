@@ -30,8 +30,6 @@
     "framer-motion": "^11.11.9",
     "global": "^4.4.0",
     "helmet": "^8.0.0",
-    "heroku": "^8.7.1",
-    "heroku-cli": "^7.0.9",
     "lucide-react": "^0.453.0",
     "prop-types": "^15.8.1",
     "quill": "^2.0.2",

@@ -123,7 +123,7 @@ const Writer = () => {
       const project = location.state?.project;
       if (project) {
         const { title, sections, sectionOrder, articles } = project;
-        setTitle(title);
+        setTitle(title || '');
         setSections(Object.entries(sections).reduce((acc, [key, value]) => {
           acc[key] = {
             ...value,
@@ -134,18 +134,15 @@ const Writer = () => {
           };
           return acc;
         }, {}));
-        setSectionOrder(sectionOrder || Object.keys(sections));
-        setActiveSection(sectionOrder?.[0] || 'Template');  // Set a default active section
+        setSectionOrder(sectionOrder || ['Template', 'Body', 'Conclusion']);
+        setActiveSection(sectionOrder?.[0] || 'Template');
         setIsTitleSet(!!title);
         setArticles(articles || []);
-      } else {
-        setSectionOrder(['Template', 'Body', 'Conclusion']);
-        setActiveSection('Template');  // Set a default active section
       }
     };
 
     fetchSectionOrder();
-  }, [location]);
+  }, [location.state?.project]);
 
   const handleExportAsMicrosoftWord = () => {
     const content = combineSections(); // Combine all section contents
@@ -171,8 +168,7 @@ const Writer = () => {
       saveAs(blob, `${title || 'Untitled'}.docx`);
     });
   };
-
-  const handleChange = (editorState) => {
+  const handleChange = async (editorState) => {
     const updatedSections = {
       ...sections,
       [activeSection]: { ...sections[activeSection], content: editorState },
@@ -181,83 +177,111 @@ const Writer = () => {
     setIsEditing(true);
     setFeedbackMessage('Editing...');
 
+    // Clear existing timeouts
     if (suggestionTimeoutRef.current) {
       clearTimeout(suggestionTimeoutRef.current);
     }
-
-    suggestionTimeoutRef.current = setTimeout(() => {
-      setIsEditing(false);
-      handleTextCompletion(editorState.getCurrentContent().getPlainText());
-    }, 4000);
-
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
 
-    saveTimeoutRef.current = setTimeout(() => {
-      const contentToSave = Object.entries(updatedSections).reduce((acc, [key, value]) => {
-        acc[key] = {
-          ...value,
-          content: value.content.getCurrentContent().getPlainText()
-        };
-        return acc;
-      }, {});
-      saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
-      setFeedbackMessage('Saving...');
-      // Set a timeout to change the feedback message to "Saved" after a short delay
-      setTimeout(() => {
-        setFeedbackMessage('Saved');
-        // Clear the "Saved" message after 3 seconds
-      }, 4000); // Adjust this delay as needed
+    // Handle text completion suggestion
+    suggestionTimeoutRef.current = setTimeout(async () => {
+      const currentContent = editorState.getCurrentContent().getPlainText();
+      if (currentContent.trim()) {
+        try {
+          console.log('Sending request to:', import.meta.env.VITE_API_URL);
+          
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/predict`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            credentials: 'include',
+            mode: 'cors',
+            body: JSON.stringify({
+              text: currentContent.trim()
+            })
+          });
+
+          console.log('Response status:', response.status);
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Server error: ${response.status}`);
+          }
+
+          const data = await response.json();
+          if (!data.suggestion) {
+            throw new Error('No suggestion received from server');
+          }
+
+          setSuggestion(data.suggestion);
+          setPreviousSuggestions(prev => [...prev, data.suggestion]);
+          setIsEditing(false);
+          setFeedbackMessage('Suggestion ready');
+        } catch (error) {
+          console.error('Error getting suggestion:', {
+            name: error.name,
+            message: error.message,
+            stack: error.stack
+          });
+          setIsEditing(false);
+          setFeedbackMessage('Failed to get suggestion');
+        }
+      }
+    }, 2000);
+
+    // Handle saving
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        const contentToSave = Object.entries(updatedSections).reduce((acc, [key, value]) => {
+          acc[key] = {
+            ...value,
+            content: value.content.getCurrentContent().getPlainText()
+          };
+          return acc;
+        }, {});
+
+        const result = await saveContent(
+          user,
+          location.state?.project,
+          contentToSave,
+          sectionOrder,
+          title,
+          articles
+        );
+
+        // If this is a new document, update the location state without navigation
+        if (result?.isNew) {
+          window.history.replaceState(
+            {
+              ...window.history.state,
+              usr: {
+                ...window.history.state.usr,
+                project: {
+                  ...location.state?.project,
+                  id: result.id,
+                  sections: contentToSave,
+                  title: title
+                }
+              }
+            },
+            ''
+          );
+        }
+
+        setFeedbackMessage('Saving...');
+        setTimeout(() => {
+          setFeedbackMessage('Saved');
+        }, 2000);
+      } catch (error) {
+        console.error('Error saving content:', error);
+        setFeedbackMessage('Error saving content');
+      }
     }, 4000);
-  };
-
-  const handleTextCompletion = async (prompt) => {
-    if (!prompt.trim()) {
-      setSuggestion('');
-      return;
-    }
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/predict`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Origin': 'http://localhost:5173'  // You might want to make this dynamic too
-        },
-        body: JSON.stringify({ prompt }),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.message) {
-        setSuggestion(data.message);
-        setPreviousSuggestions(prevSuggestions => [data.message, ...prevSuggestions.slice(0, 9)]);
-      } else {
-        setSuggestion('');
-        console.error('Error or missing message in response:', data);
-      }
-    } catch (error) {
-      setSuggestion('');
-      console.error('Error fetching prediction:', error);
-      // Optionally, show a user-friendly error message
-      alert('Failed to get suggestion. Please try again later.');
-    }
-  };
-  const handleKeyCommand = (command, editorState) => {
-    if (command === 'insert-suggestion' && suggestion) {
-      const newState = Modifier.insertText(
-        editorState.getCurrentContent(),
-        editorState.getSelection(),
-        suggestion
-      );
-      handleChange(EditorState.push(editorState, newState, 'insert-characters'));
-      setSuggestion('');
-      return 'handled';
-    }
-    return 'not-handled';
-  };
-
+};
   const keyBindingFn = (e) => {
     if (e.keyCode === 9 && !e.shiftKey && suggestion) { // 9 is the keyCode for Tab
       e.preventDefault();
@@ -349,13 +373,16 @@ const Writer = () => {
       setTimeout(() => setFeedbackMessage(''), 3000);
     }
   };
-  const handleSave = useCallback((editorState) => {
+  const handleSave = useCallback(async (editorState) => {
+    if (!user || !location.state?.project?.id) {
+      console.error("Cannot save: missing user or project ID");
+      setFeedbackMessage('Error: Cannot save document');
+      return;
+    }
+
     setIsEditing(true);
 
     // Clear any existing timeouts
-    if (suggestionTimeoutRef.current) {
-      clearTimeout(suggestionTimeoutRef.current);
-    }
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
@@ -366,31 +393,35 @@ const Writer = () => {
       [activeSection]: { ...prevSections[activeSection], content: editorState },
     }));
 
-    // Debounce the save operation
-    saveTimeoutRef.current = setTimeout(async () => {
-      try {
-        const contentToSave = Object.entries(sections).reduce((acc, [key, value]) => {
-          acc[key] = {
-            ...value,
-            content: value.content.getCurrentContent().getPlainText()
-          };
-          return acc;
-        }, {});
+    try {
+      const contentToSave = Object.entries(sections).reduce((acc, [key, value]) => {
+        acc[key] = {
+          ...value,
+          content: value.content.getCurrentContent().getPlainText()
+        };
+        return acc;
+      }, {});
 
-        setFeedbackMessage('Saving...');
+      setFeedbackMessage('Saving...');
 
-        await saveContent(user, location.state?.project, contentToSave, sectionOrder, title, articles);
+      await saveContent(
+        user,
+        location.state.project,
+        contentToSave,
+        sectionOrder,
+        title,
+        articles
+      );
 
-        setFeedbackMessage('Saved');
-        setTimeout(() => setFeedbackMessage(''), 3000);
-      } catch (error) {
-        console.error('Error saving content:', error);
-        setFeedbackMessage('Error saving');
-        setTimeout(() => setFeedbackMessage(''), 3000);
-      } finally {
-        setIsEditing(false);
-      }
-    }, 2000); // Reduced debounce time to 2 seconds
+      setFeedbackMessage('Saved');
+      setTimeout(() => setFeedbackMessage(''), 3000);
+    } catch (error) {
+      console.error('Error saving content:', error);
+      setFeedbackMessage('Error saving');
+      setTimeout(() => setFeedbackMessage(''), 3000);
+    } finally {
+      setIsEditing(false);
+    }
   }, [user, location.state?.project, sections, sectionOrder, title, articles, activeSection]);
 
   const toggleSuggestionHistory = () => {
@@ -455,6 +486,26 @@ const Writer = () => {
       // ... clear other relevant state
     };
   }, []);
+  const handleKeyCommand = (command) => {
+    if (command === 'insert-suggestion' && suggestion) {
+      const newContent = Modifier.insertText(
+        sections[activeSection].content.getCurrentContent(),
+        sections[activeSection].content.getSelection(),
+        suggestion
+      );
+      
+      const newEditorState = EditorState.push(
+        sections[activeSection].content,
+        newContent,
+        'insert-characters'
+      );
+      
+      handleChange(newEditorState);
+      setSuggestion('');
+      return 'handled';
+    }
+    return 'not-handled';
+  };
 
   return (
     <div className="writer-container">

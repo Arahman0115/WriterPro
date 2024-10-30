@@ -10,6 +10,7 @@ import UserDropdown from './UserDropdown';
 import writerlogo from './writerlogo.webp';
 import wbg from './wbg.png';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { createBlankDocument } from './contentManager';
 
 
 
@@ -54,11 +55,22 @@ const HomePage = () => {
   const handleResearchClick = () => {
     navigate('/research');
   };
-  const handleNewProjectClick = () => {
-    console.log("New Project button clicked");
+  const handleNewProjectClick = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("No user logged in");
+        return;
+      }
 
-    // Navigate to writer without creating a new document in Firestore
-    navigate('/writer', { state: { project: { title: '', sections: { Template: { content: '' } } } } });
+      const newProject = await createBlankDocument(user);
+      if (newProject) {
+        navigate('/writer', { state: { project: newProject } });
+      }
+    } catch (error) {
+      console.error("Error creating new document:", error);
+      setFeedbackMessage('Error creating new document');
+    }
   };
 
   const handleGeneralSearchClick = () => {
