@@ -18,6 +18,7 @@ body {
     /* Slightly lighter for contrast */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
     transition: all 0.3s ease;
+    overflow-y: auto;
 }
 
 .research-container h1 {

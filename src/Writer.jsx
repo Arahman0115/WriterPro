@@ -63,6 +63,7 @@ const Writer = () => {
   const [articles, setArticles] = useState([]);
   const [previousSuggestions, setPreviousSuggestions] = useState([]);
   const [showSuggestionHistory, setShowSuggestionHistory] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const navigate = useNavigate();
   const [sections, setSections] = useState({
@@ -507,6 +508,31 @@ const Writer = () => {
     return 'not-handled';
   };
 
+  const handleDeleteSection = (sectionName) => {
+    // Don't allow deletion if it's the last section
+    if (sectionOrder.length <= 1) {
+      setFeedbackMessage("Cannot delete the last remaining section");
+      return;
+    }
+
+    // Create new sections object without the deleted section
+    const { [sectionName]: deletedSection, ...remainingSections } = sections;
+    setSections(remainingSections);
+
+    // Update section order
+    setSectionOrder(prevOrder => prevOrder.filter(name => name !== sectionName));
+
+    // If the active section was deleted, switch to the first available section
+    if (activeSection === sectionName) {
+      const newActiveSection = sectionOrder.find(name => name !== sectionName);
+      setActiveSection(newActiveSection);
+    }
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
   return (
     <div className="writer-container">
       <Toolbar
@@ -516,6 +542,7 @@ const Writer = () => {
         onExportWordClick={handleExportAsMicrosoftWord}
         onShowArticlesClick={toggleArticlesVisibility}
         onCitationMangerClick={handleCitationManagerClick}
+        onDarkModeClick={toggleDarkMode}
       />
       <div className='writer-main'>
         <div className="outline-box">
@@ -531,9 +558,18 @@ const Writer = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          onClick={() => switchSection(name)}
+                          className="outline-item"
                         >
-                          {name}
+                          <span onClick={() => switchSection(name)}>{name}</span>
+                          <button 
+                            className="delete-section-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteSection(name);
+                            }}
+                          >
+                            ×
+                          </button>
                         </li>
                       )}
                     </Draggable>
@@ -579,7 +615,10 @@ const Writer = () => {
               </h2>
             )}
           </div>
-          <div className={`writing-area-container ${!isTitleSet ? 'disabled' : ''}`}>
+          <div className={`writing-area-container ${!isTitleSet ? 'disabled' : ''} ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+            <div className="page-header">
+              {title || 'Untitled Document'}
+            </div>
             {sections[activeSection] ? (
               <Editor
                 editorState={sections[activeSection].content}
@@ -591,6 +630,7 @@ const Writer = () => {
               <p>No content available for this section.</p>
             )}
           </div>
+         
           <div className="character-count">
             Character Count: {sections[activeSection].content.getCurrentContent().getPlainText('').length}
           </div>

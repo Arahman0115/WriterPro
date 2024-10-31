@@ -5,7 +5,7 @@ import homeIcon from './home-icon.jpg'; // Import your home icon image
 import { useNavigate } from 'react-router-dom';
 import wbg from './wbg.png';
 
-const Toolbar = ({ onNewClick, onSaveClick, onDownloadClick, onExportWordClick, onShowArticlesClick, onCitationMangerClick }) => {
+const Toolbar = ({ onNewClick, onSaveClick, onDownloadClick, onExportWordClick, onShowArticlesClick, onCitationMangerClick, onDarkModeClick }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const navigate = useNavigate();
 
@@ -38,11 +38,21 @@ const Toolbar = ({ onNewClick, onSaveClick, onDownloadClick, onExportWordClick, 
           )}
         </div>
 
-        {/* Edit Menu */}
+        {/* Appearance Menu */}
+        <div
+          className="menu-item"
+          onMouseEnter={() => handleDropdown('appearance')}
+          onMouseLeave={() => setActiveDropdown(null)}
+        >
+          Appearance
+          {activeDropdown === 'appearance' && (
+            <div className="dropdown">
+              <button onClick={onDarkModeClick}>Toggle Dark Mode</button>
+            </div>
+          )}
+        </div>
 
-
-        {/* Format Menu */}
-
+        {/* Citation Manager */}
         <div
           className="menu-item"
           onMouseEnter={() => handleDropdown('citation')}
@@ -52,13 +62,11 @@ const Toolbar = ({ onNewClick, onSaveClick, onDownloadClick, onExportWordClick, 
           {activeDropdown === 'citation' && (
             <div className="dropdown">
               <button onClick={onCitationMangerClick}>Create Citation List</button>
-
             </div>
-
           )}
-
         </div>
-        <button className='showarticlesbutton' onClick={onShowArticlesClick} > Articles</button>
+
+        <button className='showarticlesbutton' onClick={onShowArticlesClick}>Articles</button>
       </div>
     </div>
   );
@@ -66,7 +74,13 @@ const Toolbar = ({ onNewClick, onSaveClick, onDownloadClick, onExportWordClick, 
 
 // Define propTypes for the component
 Toolbar.propTypes = {
-  onFormat: PropTypes.func.isRequired, // Ensure onFormat is a required function
+  onNewClick: PropTypes.func.isRequired,
+  onSaveClick: PropTypes.func.isRequired,
+  onDownloadClick: PropTypes.func.isRequired,
+  onExportWordClick: PropTypes.func.isRequired,
+  onShowArticlesClick: PropTypes.func.isRequired,
+  onCitationMangerClick: PropTypes.func.isRequired,
+  onDarkModeClick: PropTypes.func.isRequired,
 };
 
 export default Toolbar;

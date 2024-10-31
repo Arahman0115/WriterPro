@@ -40,6 +40,9 @@ body {
     color: #e0e0e0;
     font-size: 1rem;
 }
+.GeneralSearch-search-input input:focus {
+    outline: none;
+}
 
 .GeneralSearch-search-input button,
 .GeneralSearch-home-button,
